@@ -218,7 +218,7 @@ def parse_kafka_configuration_page_v5(soup: BeautifulSoup) -> dict:
     return config
 
 
-def kafka_version_to_souper(version: KafkaVersion) -> Callable:
+def kafka_version_to_soup_extractor(version: KafkaVersion) -> Callable:
     if version >= KafkaVersion(0, 10, 1):
         return kafka_configuration_page_to_soup_v2
     return kafka_configuration_page_to_soup_v1
@@ -241,8 +241,8 @@ def main():
     args = parse_args()
     version = KafkaVersion.from_str(args.kafka_version)
     html = kafka_configuration_page_html(version)
-    souper = kafka_version_to_souper(version)
-    soup = souper(html)
+    soup_extractor = kafka_version_to_soup_extractor(version)
+    soup = soup_extractor(html)
     parser = kafka_version_to_parser(version)
     config = parser(soup)
     out_filepath = Path(__file__).parent.parent / "data" / f"{args.kafka_version}.json"
