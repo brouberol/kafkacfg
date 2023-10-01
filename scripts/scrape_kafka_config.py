@@ -9,6 +9,7 @@ import json
 from collections import defaultdict
 from dataclasses import dataclass
 from itertools import takewhile
+from pathlib import Path
 from typing import Callable
 
 import requests
@@ -244,7 +245,8 @@ def main():
     soup = souper(html)
     parser = kafka_version_to_parser(version)
     config = parser(soup)
-    with open(f"data/{args.kafka_version}.json", "w") as out:
+    out_filepath = Path(__file__).parent.parent / "data" / f"{args.kafka_version}.json"
+    with open(out_filepath, "w") as out:
         json.dump(config, out, indent=2)
 
 
