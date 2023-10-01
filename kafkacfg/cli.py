@@ -11,7 +11,7 @@ from .version import KAFKA_VERSIONS
 
 @click.group()
 def kafkacfg():
-    ...
+    """A kafka configuration inspector"""
 
 
 @kafkacfg.command()
@@ -23,7 +23,7 @@ def kafkacfg():
 )
 @click.argument("config_file")
 def overrides(kafka_version: str, config_file: str):
-    """Compute the overrides and associated config description from a kafka configuration file."""
+    """Display the config overrides from a kafka configuration file"""
     config = parse_properties_config(Path(config_file))
     defaults = json.load(
         open(importlib.resources.files("kafkacfg") / f"data/{kafka_version}.json")
