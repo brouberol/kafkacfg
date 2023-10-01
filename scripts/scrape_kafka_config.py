@@ -7,7 +7,6 @@ The configuration will be dumped as a JSON file, 'to be used down the road.
 import argparse
 import json
 from collections import defaultdict
-from dataclasses import dataclass
 from itertools import takewhile
 from pathlib import Path
 from typing import Callable
@@ -15,62 +14,9 @@ from typing import Callable
 import requests
 from bs4 import BeautifulSoup
 
+from kafkacfg.version import KAFKA_VERSIONS, KafkaVersion
+
 KAFKA_DOCUMENTATION_URL = "https://kafka.apache.org/{version}/documentation.html"
-KAFKA_VERSIONS = (
-    "0.7",
-    "0.8",
-    "0.8.1",
-    "0.8.2",
-    "0.9.0",
-    "0.10.0",
-    "0.10.1",
-    "0.10.2",
-    "0.11.0",
-    "1.0",
-    "1.1",
-    "2.0",
-    "2.1",
-    "2.2",
-    "2.3",
-    "2.4",
-    "2.5",
-    "2.6",
-    "2.7",
-    "2.8",
-    "3.0",
-    "3.1",
-    "3.2",
-    "3.3",
-    "3.4",
-)
-
-
-@dataclass
-class KafkaVersion:
-    major: int
-    minor: int
-    patch: int
-    full_repr: bool = True
-
-    def __ge__(self, other):
-        return (self.major, self.minor, self.patch) >= (
-            other.major,
-            other.minor,
-            other.patch,
-        )
-
-    @classmethod
-    def from_str(cls, version: str):
-        if version.count(".") == 2:
-            return cls(*map(int, version.split(".")))
-        else:
-            major, minor = version.split(".")
-            return cls(int(major), int(minor), 0, full_repr=False)
-
-    def to_url_fragment(self) -> str:
-        if self.full_repr:
-            return f"{self.major}{self.minor}{self.patch}"
-        return f"{self.major}{self.minor}"
 
 
 def parse_args() -> argparse.Namespace:
