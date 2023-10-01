@@ -8,7 +8,7 @@ num.io.threads = 10
 broker.id = 1001
 auto.create.topics.enable = false
 background.threads = 10
-$ kafkacfg overrides --config-file test.properties --kafka-version 3.4  | jq .
+$ kafkacfg overrides --kafka-version 3.4 test.properties | jq .
 {
   "num.io.threads": {
     "description": "The number of threads that the server uses for processing requests, which may include disk I/O",

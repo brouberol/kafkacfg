@@ -16,11 +16,13 @@ def kafkacfg():
 
 @kafkacfg.command()
 @click.option(
-    "-c",
-    "--config-file",
+    "-k",
+    "--kafka-version",
+    type=click.Choice(KAFKA_VERSIONS),
+    help="The kafka version you are running",
 )
-@click.option("-k", "--kafka-version", type=click.Choice(KAFKA_VERSIONS))
-def overrides(config_file: str, kafka_version: str):
+@click.argument("config_file")
+def overrides(kafka_version: str, config_file: str):
     """Compute the overrides and associated config description from a kafka configuration file."""
     config = parse_properties_config(Path(config_file))
     defaults = json.load(
