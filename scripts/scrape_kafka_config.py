@@ -245,7 +245,12 @@ def main():
     soup = soup_extractor(html)
     parser = kafka_version_to_parser(version)
     config = parser(soup)
-    out_filepath = Path(__file__).parent.parent / "data" / f"{args.kafka_version}.json"
+    out_filepath = (
+        Path(__file__).parent.parent
+        / "kafkacfg"
+        / "data"
+        / f"{args.kafka_version}.json"
+    )
     with open(out_filepath, "w") as out:
         json.dump(config, out, indent=2)
 
