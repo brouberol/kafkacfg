@@ -8,7 +8,6 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.9"
-lxml = "^4.9.3"
 
 [tool.poetry.group.dev.dependencies]
 beautifulsoup4 = "^4.12.2"
