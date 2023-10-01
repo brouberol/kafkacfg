@@ -1,0 +1,6 @@
+*.py[cod]
+*.egg-info
+cache
+*.code-workspace
+.DS_Store
+
