@@ -29,4 +29,4 @@ def overrides(kafka_version: str, config_file: str):
         open(importlib.resources.files("kafkacfg") / f"data/{kafka_version}.json")
     )
     config_overrides = compute_config_overrides(config, defaults)
-    print(json.dumps(config_overrides))
+    click.echo(json.dumps(config_overrides))
