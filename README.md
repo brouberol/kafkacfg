@@ -9,8 +9,9 @@ broker.id = 1001
 auto.create.topics.enable = false
 background.threads = 10
 $ kafkacfg overrides --kafka-version 3.4 test.properties | jq .
-{
-  "num.io.threads": {
+[
+  {
+    "name": "num.io.threads",
     "description": "The number of threads that the server uses for processing requests, which may include disk I/O",
     "type": "int",
     "default": "8",
@@ -19,7 +20,8 @@ $ kafkacfg overrides --kafka-version 3.4 test.properties | jq .
     "update_mode": "cluster-wide",
     "override": "10"
   },
-  "auto.create.topics.enable": {
+  {
+    "name": "auto.create.topics.enable",
     "description": "Enable auto creation of topic on the server",
     "type": "boolean",
     "default": "true",
@@ -28,5 +30,15 @@ $ kafkacfg overrides --kafka-version 3.4 test.properties | jq .
     "update_mode": "read-only",
     "override": "false"
   }
-}
+]
+```
+
+This format makes it easy to pipe into table-formatting tools such as [`jtbl`](https://github.com/kellyjonbrazil/jtbl):
+
+```console
+$ poetry run kafkacfg overrides -k 3.4 test.properties | jtbl
+name                       override    description                                                                                     type     default    valid_values    importance    update_mode
+-------------------------  ----------  ----------------------------------------------------------------------------------------------  -------  ---------  --------------  ------------  -------------
+num.io.threads             10          The number of threads that the server uses for processing requests, which may include disk I/O  int      8          [1,...]         high          cluster-wide
+auto.create.topics.enable  false       Enable auto creation of topic on the server                                                     boolean  true                       high          read-only
 ```
