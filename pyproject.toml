@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "kafkacfg"
+version = "0.1.0"
+description = "Compare your kafka configuration to the default values for a given kafka version"
+authors = ["Balthazar Rouberol <br@imap.cc>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+lxml = "^4.9.3"
+
+[tool.poetry.group.dev.dependencies]
+beautifulsoup4 = "^4.12.2"
+requests = "^2.31.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
