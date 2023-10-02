@@ -13,6 +13,7 @@ kafka_version_choice = click.option(
     "--kafka-version",
     type=click.Choice(KAFKA_VERSIONS),
     help="The kafka version you are running",
+    required=True,
 )
 
 
