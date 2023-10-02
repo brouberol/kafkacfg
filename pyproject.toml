@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "kafkacfg"
 version = "0.2.0"
-description = "Compare your kafka configuration to the default values for a given kafka version"
+description = "Kafka configuration inspector"
 authors = ["Balthazar Rouberol <br@imap.cc>"]
 license = "MIT"
 readme = "README.md"
