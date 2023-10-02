@@ -1,3 +1,6 @@
+import importlib.resources
+import json
+
 IGNORED_CONFIGS = (
     "broker.id",
     "broker.rack",
@@ -5,6 +8,12 @@ IGNORED_CONFIGS = (
     "logs.dir",
     "zookeeper.connect",
 )
+
+
+def load_defaults(kafka_version: str):
+    return json.load(
+        open(importlib.resources.files("kafkacfg") / f"data/{kafka_version}.json")
+    )
 
 
 def compute_config_overrides(config: dict, defaults: dict) -> list:
