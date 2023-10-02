@@ -1,0 +1,43 @@
+
+# Changelog
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](http://keepachangelog.com/)
+and this project adheres to [Semantic Versioning](http://semver.org/).
+
+## [Unreleased] - yyyy-mm-dd
+
+Here we write upgrading notes for brands. It's a team effort to make them as
+straightforward as possible.
+
+### Added
+- [PROJECTNAME-XXXX](http://tickets.projectname.com/browse/PROJECTNAME-XXXX)
+  MINOR Ticket title goes here.
+- [PROJECTNAME-YYYY](http://tickets.projectname.com/browse/PROJECTNAME-YYYY)
+  PATCH Ticket title goes here.
+
+### Changed
+
+### Fixed
+
+## [0.2.0] - 2023-10-11
+
+### Added
+- `kafkacfg explain`: displays information about all configuration tunables in a kafka config file
+- `scripts/scrape_kafka_config.py` can now scrape all configuration pages in a single run via the `-k all` flag
+
+### Changed
+- The output of `kafkacfg overrides` is now a JSON array, to make it easily pipe-able to `jtbl`
+
+### Fixed
+- Don't crash when a kafka configuration file contains a property not found in the configuration page
+
+## [0.1.0] - 2023-10-01
+
+### Added
+
+- `kafkacfg overrides`: displays information about non-default configuration tunables in a kafka config file
+
+### Changed
+
+### Fixed
