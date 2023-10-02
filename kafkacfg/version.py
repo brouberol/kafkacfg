@@ -45,6 +45,11 @@ class KafkaVersion:
             other.patch,
         )
 
+    def __str__(self) -> str:
+        if self.full_repr:
+            return f"{self.major}.{self.minor}.{self.patch}"
+        return f"{self.major}.{self.minor}"
+
     @classmethod
     def from_str(cls, version: str):
         if version.count(".") == 2:
@@ -53,7 +58,5 @@ class KafkaVersion:
             major, minor = version.split(".")
             return cls(int(major), int(minor), 0, full_repr=False)
 
-    def to_url_fragment(self) -> str:
-        if self.full_repr:
-            return f"{self.major}{self.minor}{self.patch}"
-        return f"{self.major}{self.minor}"
+    def to_url_fragment(self):
+        return str(self).replace(".", "")

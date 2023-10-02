@@ -26,7 +26,7 @@ def parse_args() -> argparse.Namespace:
         "--kafka-version",
         help="The kafka version to parse documentation for",
         required=True,
-        choices=KAFKA_VERSIONS,
+        choices=list(KAFKA_VERSIONS) + ["all"],
     )
     return parser.parse_args()
 
@@ -183,22 +183,28 @@ def kafka_version_to_parser(version: KafkaVersion) -> Callable:
         return parse_kafka_configuration_page_v1
 
 
-def main():
-    args = parse_args()
-    version = KafkaVersion.from_str(args.kafka_version)
+def scrape_kafka_config(version: str):
+    version = KafkaVersion.from_str(version)
     html = kafka_configuration_page_html(version)
     soup_extractor = kafka_version_to_soup_extractor(version)
     soup = soup_extractor(html)
     parser = kafka_version_to_parser(version)
     config = parser(soup)
     out_filepath = (
-        Path(__file__).parent.parent
-        / "kafkacfg"
-        / "data"
-        / f"{args.kafka_version}.json"
+        Path(__file__).parent.parent / "kafkacfg" / "data" / f"{version}.json"
     )
     with open(out_filepath, "w") as out:
         json.dump(config, out, indent=2)
+
+
+def main():
+    args = parse_args()
+    if args.kafka_version == "all":
+        for version in KAFKA_VERSIONS:
+            print(f"Scraping configuration for kafka {version}")
+            scrape_kafka_config(version)
+    else:
+        scrape_kafka_config(args.kafka_kversion)
 
 
 if __name__ == "__main__":
