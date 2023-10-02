@@ -120,3 +120,30 @@ name                                 override    description                    
 replica.fetch.min.bytes                     512  Minimum bytes expected for each fetch response. If not enough bytes, wait up to replicaMaxWaitTimeMs  int             1                  high          read-only
 replica.socket.receive.buffer.bytes              The socket receive buffer for network requests                                                        int         65536                  high          read-only
 ```
+
+
+### `kafkacfg recommends`
+
+The `recommends` command emits sourced configuration recommendation based on broker attributes (number of CPUs, number of disks, etc).
+
+> *Note*: These are suggestions more than absolute thruths. We encourage you to read the sources, test the configuration values and make your own mind.
+
+```console
+$ kafkacfg recommends -k 3.4 --broker-num-cpus 24 --broker-num-disks 12 server.properties
+Recommendation 1: set num.io.threads == 12
+* https://strimzi.io/blog/2021/06/08/broker-tuning/
+
+Recommendation 2: set replica.fetch.min.bytes == 512
+* https://azure.microsoft.com/en-us/blog/processing-trillions-of-events-per-day-with-apache-kafka-on-azure/
+
+Recommendation 3: set socket.receive.buffer.bytes == 512
+* https://azure.microsoft.com/en-us/blog/processing-trillions-of-events-per-day-with-apache-kafka-on-azure/
+* https://strimzi.io/blog/2021/06/08/broker-tuning/
+
+Recommendation 4: set socket.send.buffer.bytes == 1048576
+* https://azure.microsoft.com/en-us/blog/processing-trillions-of-events-per-day-with-apache-kafka-on-azure/
+* https://strimzi.io/blog/2021/06/08/broker-tuning/
+
+Recommendation 5: set replica.socket.receive.buffer.bytes == 1048576
+* https://azure.microsoft.com/en-us/blog/processing-trillions-of-events-per-day-with-apache-kafka-on-azure/
+```

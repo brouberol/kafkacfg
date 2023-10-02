@@ -3,11 +3,13 @@ from pathlib import Path
 
 import click
 
+from .broker import BrokerAttributes
 from .config import (
     compute_config_overrides,
     explain_config,
     filter_config_values,
     load_defaults,
+    recommend_config,
 )
 from .exceptions import InvalidPredicateAttribute
 from .parser import parse_properties_config
@@ -92,3 +94,32 @@ def filter(kafka_version: str, query: str, config_file: str):
         click.echo(exc, err=True)
     else:
         click.echo(json.dumps(filtered_configs))
+
+
+@kafkacfg.command()
+@kafka_version_choice
+@click.option(
+    "--broker-num-cpus",
+    type=int,
+    help="The number of processors per broker",
+    required=True,
+)
+@click.option(
+    "--broker-num-disks",
+    type=int,
+    help="The number of hard drives per broker",
+    required=True,
+)
+@click.argument("config_file")
+def recommends(
+    kafka_version: str, config_file: str, broker_num_cpus: int, broker_num_disks: int
+):
+    """Emit sourced configuration recommendations based on broker attributes"""
+    config = parse_properties_config(Path(config_file))
+    defaults = load_defaults(kafka_version)
+    broker_attrs = BrokerAttributes(
+        num_cpus=broker_num_cpus, num_disks=broker_num_disks
+    )
+    recos = recommend_config(config, defaults, broker_attrs)
+    for i, reco in enumerate(recos, 1):
+        click.echo(f"Recommendation {i}: set {reco.render(vars(broker_attrs))}\n")
