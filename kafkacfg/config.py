@@ -1,4 +1,10 @@
-IGNORED_CONFIGS = ("broker.id", "brokerid", "zookeeper.connect")
+IGNORED_CONFIGS = (
+    "broker.id",
+    "broker.rack",
+    "brokerid",
+    "logs.dir",
+    "zookeeper.connect",
+)
 
 
 def compute_config_overrides(config: dict, defaults: dict) -> list:
@@ -14,3 +20,13 @@ def compute_config_overrides(config: dict, defaults: dict) -> list:
                 {"name": config_name, "override": config_value} | config_default_value
             )
     return overrides
+
+
+def explain_config(config: dict, defaults: dict) -> list:
+    explained_config = []
+    for config_name, config_value in config.items():
+        config_default_value = defaults.get(config_name, {})
+        explained_config.append(
+            {"name": config_name, "override": config_value} | config_default_value
+        )
+    return explained_config
