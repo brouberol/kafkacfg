@@ -22,7 +22,7 @@ straightforward as possible.
 ### Added
 - `kafkacfg explain`: displays information about all configuration tunables in a kafka config file
 - `scripts/scrape_kafka_config.py` can now scrape all configuration pages in a single run via the `-k all` flag
-
+- `kafkacfg filter`: filters all configuration tunables and enrich the results with the tunable metadata and override
 ### Changed
 - The output of `kafkacfg overrides` is now a JSON array, to make it easily pipe-able to `jtbl`
 

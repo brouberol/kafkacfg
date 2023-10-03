@@ -1,6 +1,8 @@
 import importlib.resources
 import json
 
+from .filter import Filter
+
 IGNORED_CONFIGS = (
     "broker.id",
     "broker.rack",
@@ -39,3 +41,17 @@ def explain_config(config: dict, defaults: dict) -> list:
             {"name": config_name, "override": config_value} | config_default_value
         )
     return explained_config
+
+
+def filter_config_values(filter_str: str, config: dict, defaults: dict) -> dict:
+    matching_configs = {}
+    config_filter = Filter.from_str(filter_str)
+    for config_name, config_value in defaults.items():
+        for predicate in config_filter.predicates:
+            full_config_value = config_value | {"name": config_name}
+            if not predicate.matches(full_config_value):
+                break
+        else:
+            matching_configs[config_name] = config.get(config_name)
+
+    return explain_config(matching_configs, defaults)

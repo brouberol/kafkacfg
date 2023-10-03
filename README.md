@@ -2,6 +2,10 @@
 
 Kafka has _a lot_ of parameters, tunables and knobs, and the [configuration page](https://kafka.apache.org/34/documentation.html#configuration) isn't the easiest to parse. `kafkacfg` allows you to parse your kafka configuration file help you understand what it does.
 
+### `kafkacfg explain`
+
+This command is used to display extra information about each configuration tunable used in your configuration file.
+
 ```console
 $ cat test.properties
 num.io.threads = 10
@@ -84,6 +88,8 @@ $ kafkacfg explain -k 3.4 test.properties | jtbl
 ╘═══════════════════════════╧════════════╧═══════════════════════════════════╧═════════╧═══════════╧════════════════╧══════════════╧═══════════════╛
 ```
 
+### `kafkacfg overrides`
+
 The `overrides` command will only display and enrich the configuration tunables with non-default values, to help you understand in what way your kafka configuration was tuned:
 
 ```console
@@ -92,4 +98,25 @@ name                       override    description                              
 -------------------------  ----------  ----------------------------------------------------------------------------------------------  -------  ---------  --------------  ------------  -------------
 num.io.threads             10          The number of threads that the server uses for processing requests, which may include disk I/O  int      8          [1,...]         high          cluster-wide
 auto.create.topics.enable  false       Enable auto creation of topic on the server                                                     boolean  true                       high          read-only
+```
+
+### `kafkacfg filter`
+
+The `filter` query allows you to filter the kafka configuration tunables with a custom query, while enriching the filter results with the usual metadata and potential override value.
+
+```console
+$ kafkacfg filter --query name=replica.fetch.min.bytes -k 1.1 server.properties | jtbl
+name                     override    description                                                                                           type      default  valid_values    importance    update_mode
+-----------------------  ----------  ----------------------------------------------------------------------------------------------------  ------  ---------  --------------  ------------  -------------
+replica.fetch.min.bytes              Minimum bytes expected for each fetch response. If not enough bytes, wait up to replicaMaxWaitTimeMs  int             1                  high          read-only
+```
+
+You can also compose filter predicates and even use `*` for a glob match:
+
+```console
+$ kafkacfg filter --query "name=replica.*.bytes;importance=high" -k 3.4 server.properties | jtbl
+name                                 override    description                                                                                           type      default  valid_values    importance    update_mode
+-----------------------------------  ----------  ----------------------------------------------------------------------------------------------------  ------  ---------  --------------  ------------  -------------
+replica.fetch.min.bytes                     512  Minimum bytes expected for each fetch response. If not enough bytes, wait up to replicaMaxWaitTimeMs  int             1                  high          read-only
+replica.socket.receive.buffer.bytes              The socket receive buffer for network requests                                                        int         65536                  high          read-only
 ```
