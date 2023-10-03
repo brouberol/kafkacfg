@@ -59,7 +59,7 @@ def explain(kafka_version: str, config_file: str):
 )
 @click.argument("config_file")
 def filter(kafka_version: str, query: str, config_file: str):
-    """Query kafka configuration tunables via their attribute
+    """Query kafka configuration tunables by their attributes
 
     Examples:
 
