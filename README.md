@@ -102,7 +102,7 @@ auto.create.topics.enable  false       Enable auto creation of topic on the serv
 
 ### `kafkacfg filter`
 
-The `filter` query allows you to filter the kafka configuration tunables with a custom query, while enriching the filter results with the usual metadata and potential override value.
+The `filter` command allows you to filter the kafka configuration tunables with a custom query, while enriching the filter results with the usual metadata and potential override value.
 
 ```console
 $ kafkacfg filter --query name=replica.fetch.min.bytes -k 1.1 server.properties | jtbl
