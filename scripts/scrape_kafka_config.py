@@ -204,7 +204,7 @@ def main():
             print(f"Scraping configuration for kafka {version}")
             scrape_kafka_config(version)
     else:
-        scrape_kafka_config(args.kafka_kversion)
+        scrape_kafka_config(args.kafka_version)
 
 
 if __name__ == "__main__":
