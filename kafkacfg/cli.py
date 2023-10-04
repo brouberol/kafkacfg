@@ -122,4 +122,4 @@ def recommends(
     )
     recos = recommend_config(config, defaults, broker_attrs)
     for i, reco in enumerate(recos, 1):
-        click.echo(f"Recommendation {i}: set {reco.render(vars(broker_attrs))}\n")
+        click.echo(f"Recommendation {i}: set {reco}")

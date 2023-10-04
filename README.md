@@ -130,7 +130,7 @@ The `recommends` command emits sourced configuration recommendation based on bro
 
 ```console
 $ kafkacfg recommends -k 3.4 --broker-num-cpus 24 --broker-num-disks 12 server.properties
-Recommendation 1: set num.io.threads == 12
+Recommendation 1: set num.io.threads == 12 (num_disks)
 * https://strimzi.io/blog/2021/06/08/broker-tuning/
 
 Recommendation 2: set replica.fetch.min.bytes == 512

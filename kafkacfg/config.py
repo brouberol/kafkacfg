@@ -64,7 +64,7 @@ def filter_config_values(filter_str: str, config: dict, defaults: dict) -> dict:
 
 def recommend_config(
     config: dict, defaults: dict, broker_attrs: BrokerAttributes
-) -> list[Recommendation]:
+) -> list[str]:
     """Inspect the broker configuration and recommend some configuration tweaks"""
     recos = []
     defaults_kv = {
@@ -80,5 +80,5 @@ def recommend_config(
         if not recommendation.operator(
             int(config_current_value), config_recommended_value
         ):
-            recos.append(recommendation)
+            recos.append(recommendation.render(vars(broker_attrs)))
     return recos

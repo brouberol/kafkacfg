@@ -24,7 +24,10 @@ class Recommendation:
     def evaluate(self, context: dict) -> str:
         rendered_formula = self.formula.format(**context)
         evaluated_formula = eval(rendered_formula)
-        return f"{self.config} {operator_repr[self.operator]} {evaluated_formula}"
+        parts = [self.config, operator_repr[self.operator], evaluated_formula]
+        if str(evaluated_formula) != str(self.formula):
+            parts.append(f"({self.formula.replace('{', '').replace('}', '')})")
+        return " ".join(map(str, parts))
 
     def render(self, context: dict) -> str:
         evaluation = self.evaluate(context)
