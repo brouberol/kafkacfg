@@ -1,6 +1,7 @@
 {
   "zookeeper.connect": {
     "description": "Specifies the ZooKeeper connection string in the form hostname:port where host and port are the host and port of a ZooKeeper server. To allow connecting through other ZooKeeper nodes when that ZooKeeper machine is down you can also specify multiple hosts in the form hostname1:port1,hostname2:port2,hostname3:port3.\nThe server can also have a ZooKeeper chroot path as part of its ZooKeeper connection string which puts its data under some path in the global ZooKeeper namespace. For example to give a chroot path of /chroot/path you would give the connection string as hostname1:port1,hostname2:port2,hostname3:port3/chroot/path.",
+    "scope": "broker",
     "type": "string",
     "default": null,
     "valid_values": null,
@@ -9,6 +10,7 @@
   },
   "advertised.host.name": {
     "description": "DEPRECATED: only used when advertised.listeners or listeners are not set. Use advertised.listeners instead. \nHostname to publish to ZooKeeper for clients to use. In IaaS environments, this may need to be different from the interface to which the broker binds. If this is not set, it will use the value for host.name if configured. Otherwise it will use the value returned from java.net.InetAddress.getCanonicalHostName().",
+    "scope": "broker",
     "type": "string",
     "default": "null",
     "valid_values": null,
@@ -17,6 +19,7 @@
   },
   "advertised.listeners": {
     "description": "Listeners to publish to ZooKeeper for clients to use, if different than the listeners config property. In IaaS environments, this may need to be different from the interface to which the broker binds. If this is not set, the value for listeners will be used. Unlike listeners it is not valid to advertise the 0.0.0.0 meta-address.",
+    "scope": "broker",
     "type": "string",
     "default": "null",
     "valid_values": null,
@@ -25,6 +28,7 @@
   },
   "advertised.port": {
     "description": "DEPRECATED: only used when advertised.listeners or listeners are not set. Use advertised.listeners instead. \nThe port to publish to ZooKeeper for clients to use. In IaaS environments, this may need to be different from the port to which the broker binds. If this is not set, it will publish the same port that the broker binds to.",
+    "scope": "broker",
     "type": "int",
     "default": "null",
     "valid_values": null,
@@ -33,6 +37,7 @@
   },
   "auto.create.topics.enable": {
     "description": "Enable auto creation of topic on the server",
+    "scope": "broker",
     "type": "boolean",
     "default": "true",
     "valid_values": null,
@@ -41,6 +46,7 @@
   },
   "auto.leader.rebalance.enable": {
     "description": "Enables auto leader balancing. A background thread checks and triggers leader balance if required at regular intervals",
+    "scope": "broker",
     "type": "boolean",
     "default": "true",
     "valid_values": null,
@@ -49,6 +55,7 @@
   },
   "background.threads": {
     "description": "The number of threads to use for various background processing tasks",
+    "scope": "broker",
     "type": "int",
     "default": "10",
     "valid_values": "[1,...]",
@@ -57,6 +64,7 @@
   },
   "broker.id": {
     "description": "The broker id for this server. If unset, a unique broker id will be generated.To avoid conflicts between zookeeper generated broker id's and user configured broker id's, generated broker ids start from reserved.broker.max.id + 1.",
+    "scope": "broker",
     "type": "int",
     "default": "-1",
     "valid_values": null,
@@ -65,14 +73,17 @@
   },
   "compression.type": {
     "description": "Specify the final compression type for a given topic. This configuration accepts the standard compression codecs ('gzip', 'snappy', 'lz4', 'zstd'). It additionally accepts 'uncompressed' which is equivalent to no compression; and 'producer' which means retain the original compression codec set by the producer.",
+    "scope": "topic",
     "type": "string",
     "default": "producer",
-    "valid_values": null,
-    "importance": "high",
-    "update_mode": "cluster-wide"
+    "valid_values": "[uncompressed, zstd, lz4, snappy, gzip, producer]",
+    "importance": "medium",
+    "update_mode": "cluster-wide",
+    "server_default_property": "compression.type"
   },
   "control.plane.listener.name": {
     "description": "Name of listener used for communication between controller and brokers. Broker will use the control.plane.listener.name to locate the endpoint in listeners list, to listen for connections from the controller. For example, if a broker's config is :\nlisteners = INTERNAL://192.1.1.8:9092, EXTERNAL://10.1.1.5:9093, CONTROLLER://192.1.1.8:9094\nlistener.security.protocol.map = INTERNAL:PLAINTEXT, EXTERNAL:SSL, CONTROLLER:SSL\ncontrol.plane.listener.name = CONTROLLER\nOn startup, the broker will start listening on \"192.1.1.8:9094\" with security protocol \"SSL\".\nOn controller side, when it discovers a broker's published endpoints through zookeeper, it will use the control.plane.listener.name to find the endpoint, which it will use to establish connection to the broker.\nFor example, if the broker's published endpoints on zookeeper are :\n\"endpoints\" : [\"INTERNAL://broker1.example.com:9092\",\"EXTERNAL://broker1.example.com:9093\",\"CONTROLLER://broker1.example.com:9094\"]\n and the controller's config is :\nlistener.security.protocol.map = INTERNAL:PLAINTEXT, EXTERNAL:SSL, CONTROLLER:SSL\ncontrol.plane.listener.name = CONTROLLER\nthen controller will use \"broker1.example.com:9094\" with security protocol \"SSL\" to connect to the broker.\nIf not explicitly configured, the default value will be null and there will be no dedicated endpoints for controller connections.",
+    "scope": "broker",
     "type": "string",
     "default": "null",
     "valid_values": null,
@@ -81,6 +92,7 @@
   },
   "delete.topic.enable": {
     "description": "Enables delete topic. Delete topic through the admin tool will have no effect if this config is turned off",
+    "scope": "broker",
     "type": "boolean",
     "default": "true",
     "valid_values": null,
@@ -89,6 +101,7 @@
   },
   "host.name": {
     "description": "DEPRECATED: only used when listeners is not set. Use listeners instead. \nhostname of broker. If this is set, it will only bind to this address. If this is not set, it will bind to all interfaces",
+    "scope": "broker",
     "type": "string",
     "default": "\"\"",
     "valid_values": null,
@@ -97,6 +110,7 @@
   },
   "leader.imbalance.check.interval.seconds": {
     "description": "The frequency with which the partition rebalance check is triggered by the controller",
+    "scope": "broker",
     "type": "long",
     "default": "300",
     "valid_values": null,
@@ -105,6 +119,7 @@
   },
   "leader.imbalance.per.broker.percentage": {
     "description": "The ratio of leader imbalance allowed per broker. The controller would trigger a leader balance if it goes above this value per broker. The value is specified in percentage.",
+    "scope": "broker",
     "type": "int",
     "default": "10",
     "valid_values": null,
@@ -113,6 +128,7 @@
   },
   "listeners": {
     "description": "Listener List - Comma-separated list of URIs we will listen on and the listener names. If the listener name is not a security protocol, listener.security.protocol.map must also be set.\n Specify hostname as 0.0.0.0 to bind to all interfaces.\n Leave hostname empty to bind to default interface.\n Examples of legal listener lists:\n PLAINTEXT://myhost:9092,SSL://:9091\n CLIENT://0.0.0.0:9092,REPLICATION://localhost:9093\n",
+    "scope": "broker",
     "type": "string",
     "default": "null",
     "valid_values": null,
@@ -121,6 +137,7 @@
   },
   "log.dir": {
     "description": "The directory in which the log data is kept (supplemental for log.dirs property)",
+    "scope": "broker",
     "type": "string",
     "default": "/tmp/kafka-logs",
     "valid_values": null,
@@ -129,6 +146,7 @@
   },
   "log.dirs": {
     "description": "The directories in which the log data is kept. If not set, the value in log.dir is used",
+    "scope": "broker",
     "type": "string",
     "default": "null",
     "valid_values": null,
@@ -137,6 +155,7 @@
   },
   "log.flush.interval.messages": {
     "description": "The number of messages accumulated on a log partition before messages are flushed to disk ",
+    "scope": "broker",
     "type": "long",
     "default": "9223372036854775807",
     "valid_values": "[1,...]",
@@ -145,6 +164,7 @@
   },
   "log.flush.interval.ms": {
     "description": "The maximum time in ms that a message in any topic is kept in memory before flushed to disk. If not set, the value in log.flush.scheduler.interval.ms is used",
+    "scope": "broker",
     "type": "long",
     "default": "null",
     "valid_values": null,
@@ -153,6 +173,7 @@
   },
   "log.flush.offset.checkpoint.interval.ms": {
     "description": "The frequency with which we update the persistent record of the last flush which acts as the log recovery point",
+    "scope": "broker",
     "type": "int",
     "default": "60000",
     "valid_values": "[0,...]",
@@ -161,6 +182,7 @@
   },
   "log.flush.scheduler.interval.ms": {
     "description": "The frequency in ms that the log flusher checks whether any log needs to be flushed to disk",
+    "scope": "broker",
     "type": "long",
     "default": "9223372036854775807",
     "valid_values": null,
@@ -169,6 +191,7 @@
   },
   "log.flush.start.offset.checkpoint.interval.ms": {
     "description": "The frequency with which we update the persistent record of log start offset",
+    "scope": "broker",
     "type": "int",
     "default": "60000",
     "valid_values": "[0,...]",
@@ -177,6 +200,7 @@
   },
   "log.retention.bytes": {
     "description": "The maximum size of the log before deleting it",
+    "scope": "broker",
     "type": "long",
     "default": "-1",
     "valid_values": null,
@@ -185,6 +209,7 @@
   },
   "log.retention.hours": {
     "description": "The number of hours to keep a log file before deleting it (in hours), tertiary to log.retention.ms property",
+    "scope": "broker",
     "type": "int",
     "default": "168",
     "valid_values": null,
@@ -193,6 +218,7 @@
   },
   "log.retention.minutes": {
     "description": "The number of minutes to keep a log file before deleting it (in minutes), secondary to log.retention.ms property. If not set, the value in log.retention.hours is used",
+    "scope": "broker",
     "type": "int",
     "default": "null",
     "valid_values": null,
@@ -201,6 +227,7 @@
   },
   "log.retention.ms": {
     "description": "The number of milliseconds to keep a log file before deleting it (in milliseconds), If not set, the value in log.retention.minutes is used",
+    "scope": "broker",
     "type": "long",
     "default": "null",
     "valid_values": null,
@@ -209,6 +236,7 @@
   },
   "log.roll.hours": {
     "description": "The maximum time before a new log segment is rolled out (in hours), secondary to log.roll.ms property",
+    "scope": "broker",
     "type": "int",
     "default": "168",
     "valid_values": "[1,...]",
@@ -217,6 +245,7 @@
   },
   "log.roll.jitter.hours": {
     "description": "The maximum jitter to subtract from logRollTimeMillis (in hours), secondary to log.roll.jitter.ms property",
+    "scope": "broker",
     "type": "int",
     "default": "0",
     "valid_values": "[0,...]",
@@ -225,6 +254,7 @@
   },
   "log.roll.jitter.ms": {
     "description": "The maximum jitter to subtract from logRollTimeMillis (in milliseconds). If not set, the value in log.roll.jitter.hours is used",
+    "scope": "broker",
     "type": "long",
     "default": "null",
     "valid_values": null,
@@ -233,6 +263,7 @@
   },
   "log.roll.ms": {
     "description": "The maximum time before a new log segment is rolled out (in milliseconds). If not set, the value in log.roll.hours is used",
+    "scope": "broker",
     "type": "long",
     "default": "null",
     "valid_values": null,
@@ -241,6 +272,7 @@
   },
   "log.segment.bytes": {
     "description": "The maximum size of a single log file",
+    "scope": "broker",
     "type": "int",
     "default": "1073741824",
     "valid_values": "[14,...]",
@@ -249,6 +281,7 @@
   },
   "log.segment.delete.delay.ms": {
     "description": "The amount of time to wait before deleting a file from the filesystem",
+    "scope": "broker",
     "type": "long",
     "default": "60000",
     "valid_values": "[0,...]",
@@ -257,6 +290,7 @@
   },
   "message.max.bytes": {
     "description": "The largest record batch size allowed by Kafka. If this is increased and there are consumers older than 0.10.2, the consumers' fetch size must also be increased so that the they can fetch record batches this large.In the latest message format version, records are always grouped into batches for efficiency. In previous message format versions, uncompressed records are not grouped into batches and this limit only applies to a single record in that case.This can be set per topic with the topic level max.message.bytes config.",
+    "scope": "broker",
     "type": "int",
     "default": "1000012",
     "valid_values": "[0,...]",
@@ -264,15 +298,18 @@
     "update_mode": "cluster-wide"
   },
   "min.insync.replicas": {
-    "description": "When a producer sets acks to \"all\" (or \"-1\"), min.insync.replicas specifies the minimum number of replicas that must acknowledge a write for the write to be considered successful. If this minimum cannot be met, then the producer will raise an exception (either NotEnoughReplicas or NotEnoughReplicasAfterAppend).When used together, min.insync.replicas and acks allow you to enforce greater durability guarantees. A typical scenario would be to create a topic with a replication factor of 3, set min.insync.replicas to 2, and produce with acks of \"all\". This will ensure that the producer raises an exception if a majority of replicas do not receive a write.",
+    "description": "When a producer sets acks to \"all\" (or \"-1\"), this configuration specifies the minimum number of replicas that must acknowledge a write for the write to be considered successful. If this minimum cannot be met, then the producer will raise an exception (either NotEnoughReplicas or NotEnoughReplicasAfterAppend).When used together, min.insync.replicas and acks allow you to enforce greater durability guarantees. A typical scenario would be to create a topic with a replication factor of 3, set min.insync.replicas to 2, and produce with acks of \"all\". This will ensure that the producer raises an exception if a majority of replicas do not receive a write.",
+    "scope": "topic",
     "type": "int",
     "default": "1",
     "valid_values": "[1,...]",
-    "importance": "high",
-    "update_mode": "cluster-wide"
+    "importance": "medium",
+    "update_mode": "cluster-wide",
+    "server_default_property": "min.insync.replicas"
   },
   "num.io.threads": {
     "description": "The number of threads that the server uses for processing requests, which may include disk I/O",
+    "scope": "broker",
     "type": "int",
     "default": "8",
     "valid_values": "[1,...]",
@@ -281,6 +318,7 @@
   },
   "num.network.threads": {
     "description": "The number of threads that the server uses for receiving requests from the network and sending responses to the network",
+    "scope": "broker",
     "type": "int",
     "default": "3",
     "valid_values": "[1,...]",
@@ -289,6 +327,7 @@
   },
   "num.recovery.threads.per.data.dir": {
     "description": "The number of threads per data directory to be used for log recovery at startup and flushing at shutdown",
+    "scope": "broker",
     "type": "int",
     "default": "1",
     "valid_values": "[1,...]",
@@ -297,6 +336,7 @@
   },
   "num.replica.alter.log.dirs.threads": {
     "description": "The number of threads that can move replicas between log directories, which may include disk I/O",
+    "scope": "broker",
     "type": "int",
     "default": "null",
     "valid_values": null,
@@ -305,6 +345,7 @@
   },
   "num.replica.fetchers": {
     "description": "Number of fetcher threads used to replicate messages from a source broker. Increasing this value can increase the degree of I/O parallelism in the follower broker.",
+    "scope": "broker",
     "type": "int",
     "default": "1",
     "valid_values": null,
@@ -313,6 +354,7 @@
   },
   "offset.metadata.max.bytes": {
     "description": "The maximum size for a metadata entry associated with an offset commit",
+    "scope": "broker",
     "type": "int",
     "default": "4096",
     "valid_values": null,
@@ -321,6 +363,7 @@
   },
   "offsets.commit.required.acks": {
     "description": "The required acks before the commit can be accepted. In general, the default (-1) should not be overridden",
+    "scope": "broker",
     "type": "short",
     "default": "-1",
     "valid_values": null,
@@ -329,6 +372,7 @@
   },
   "offsets.commit.timeout.ms": {
     "description": "Offset commit will be delayed until all replicas for the offsets topic receive the commit or this timeout is reached. This is similar to the producer request timeout.",
+    "scope": "broker",
     "type": "int",
     "default": "5000",
     "valid_values": "[1,...]",
@@ -337,6 +381,7 @@
   },
   "offsets.load.buffer.size": {
     "description": "Batch size for reading from the offsets segments when loading offsets into the cache (soft-limit, overridden if records are too large).",
+    "scope": "broker",
     "type": "int",
     "default": "5242880",
     "valid_values": "[1,...]",
@@ -345,6 +390,7 @@
   },
   "offsets.retention.check.interval.ms": {
     "description": "Frequency at which to check for stale offsets",
+    "scope": "broker",
     "type": "long",
     "default": "600000",
     "valid_values": "[1,...]",
@@ -353,6 +399,7 @@
   },
   "offsets.retention.minutes": {
     "description": "After a consumer group loses all its consumers (i.e. becomes empty) its offsets will be kept for this retention period before getting discarded. For standalone consumers (using manual assignment), offsets will be expired after the time of last commit plus this retention period.",
+    "scope": "broker",
     "type": "int",
     "default": "10080",
     "valid_values": "[1,...]",
@@ -361,6 +408,7 @@
   },
   "offsets.topic.compression.codec": {
     "description": "Compression codec for the offsets topic - compression may be used to achieve \"atomic\" commits",
+    "scope": "broker",
     "type": "int",
     "default": "0",
     "valid_values": null,
@@ -369,6 +417,7 @@
   },
   "offsets.topic.num.partitions": {
     "description": "The number of partitions for the offset commit topic (should not change after deployment)",
+    "scope": "broker",
     "type": "int",
     "default": "50",
     "valid_values": "[1,...]",
@@ -377,6 +426,7 @@
   },
   "offsets.topic.replication.factor": {
     "description": "The replication factor for the offsets topic (set higher to ensure availability). Internal topic creation will fail until the cluster size meets this replication factor requirement.",
+    "scope": "broker",
     "type": "short",
     "default": "3",
     "valid_values": "[1,...]",
@@ -385,6 +435,7 @@
   },
   "offsets.topic.segment.bytes": {
     "description": "The offsets topic segment bytes should be kept relatively small in order to facilitate faster log compaction and cache loads",
+    "scope": "broker",
     "type": "int",
     "default": "104857600",
     "valid_values": "[1,...]",
@@ -393,6 +444,7 @@
   },
   "port": {
     "description": "DEPRECATED: only used when listeners is not set. Use listeners instead. \nthe port to listen and accept connections on",
+    "scope": "broker",
     "type": "int",
     "default": "9092",
     "valid_values": null,
@@ -401,6 +453,7 @@
   },
   "queued.max.requests": {
     "description": "The number of queued requests allowed for data-plane, before blocking the network threads",
+    "scope": "broker",
     "type": "int",
     "default": "500",
     "valid_values": "[1,...]",
@@ -409,6 +462,7 @@
   },
   "quota.consumer.default": {
     "description": "DEPRECATED: Used only when dynamic default quotas are not configured for  or  in Zookeeper. Any consumer distinguished by clientId/consumer group will get throttled if it fetches more bytes than this value per-second",
+    "scope": "broker",
     "type": "long",
     "default": "9223372036854775807",
     "valid_values": "[1,...]",
@@ -417,6 +471,7 @@
   },
   "quota.producer.default": {
     "description": "DEPRECATED: Used only when dynamic default quotas are not configured for ,  or  in Zookeeper. Any producer distinguished by clientId will get throttled if it produces more bytes than this value per-second",
+    "scope": "broker",
     "type": "long",
     "default": "9223372036854775807",
     "valid_values": "[1,...]",
@@ -425,6 +480,7 @@
   },
   "replica.fetch.min.bytes": {
     "description": "Minimum bytes expected for each fetch response. If not enough bytes, wait up to replicaMaxWaitTimeMs",
+    "scope": "broker",
     "type": "int",
     "default": "1",
     "valid_values": null,
@@ -433,6 +489,7 @@
   },
   "replica.fetch.wait.max.ms": {
     "description": "max wait time for each fetcher request issued by follower replicas. This value should always be less than the replica.lag.time.max.ms at all times to prevent frequent shrinking of ISR for low throughput topics",
+    "scope": "broker",
     "type": "int",
     "default": "500",
     "valid_values": null,
@@ -441,6 +498,7 @@
   },
   "replica.high.watermark.checkpoint.interval.ms": {
     "description": "The frequency with which the high watermark is saved out to disk",
+    "scope": "broker",
     "type": "long",
     "default": "5000",
     "valid_values": null,
@@ -449,6 +507,7 @@
   },
   "replica.lag.time.max.ms": {
     "description": "If a follower hasn't sent any fetch requests or hasn't consumed up to the leaders log end offset for at least this time, the leader will remove the follower from isr",
+    "scope": "broker",
     "type": "long",
     "default": "10000",
     "valid_values": null,
@@ -457,6 +516,7 @@
   },
   "replica.socket.receive.buffer.bytes": {
     "description": "The socket receive buffer for network requests",
+    "scope": "broker",
     "type": "int",
     "default": "65536",
     "valid_values": null,
@@ -465,6 +525,7 @@
   },
   "replica.socket.timeout.ms": {
     "description": "The socket timeout for network requests. Its value should be at least replica.fetch.wait.max.ms",
+    "scope": "broker",
     "type": "int",
     "default": "30000",
     "valid_values": null,
@@ -473,6 +534,7 @@
   },
   "request.timeout.ms": {
     "description": "The configuration controls the maximum amount of time the client will wait for the response of a request. If the response is not received before the timeout elapses the client will resend the request if necessary or fail the request if retries are exhausted.",
+    "scope": "broker",
     "type": "int",
     "default": "30000",
     "valid_values": null,
@@ -481,6 +543,7 @@
   },
   "socket.receive.buffer.bytes": {
     "description": "The SO_RCVBUF buffer of the socket sever sockets. If the value is -1, the OS default will be used.",
+    "scope": "broker",
     "type": "int",
     "default": "102400",
     "valid_values": null,
@@ -489,6 +552,7 @@
   },
   "socket.request.max.bytes": {
     "description": "The maximum number of bytes in a socket request",
+    "scope": "broker",
     "type": "int",
     "default": "104857600",
     "valid_values": "[1,...]",
@@ -497,6 +561,7 @@
   },
   "socket.send.buffer.bytes": {
     "description": "The SO_SNDBUF buffer of the socket sever sockets. If the value is -1, the OS default will be used.",
+    "scope": "broker",
     "type": "int",
     "default": "102400",
     "valid_values": null,
@@ -505,6 +570,7 @@
   },
   "transaction.max.timeout.ms": {
     "description": "The maximum allowed timeout for transactions. If a client\u00e2\u0080\u0099s requested transaction time exceed this, then the broker will return an error in InitProducerIdRequest. This prevents a client from too large of a timeout, which can stall consumers reading from topics included in the transaction.",
+    "scope": "broker",
     "type": "int",
     "default": "900000",
     "valid_values": "[1,...]",
@@ -513,6 +579,7 @@
   },
   "transaction.state.log.load.buffer.size": {
     "description": "Batch size for reading from the transaction log segments when loading producer ids and transactions into the cache (soft-limit, overridden if records are too large).",
+    "scope": "broker",
     "type": "int",
     "default": "5242880",
     "valid_values": "[1,...]",
@@ -521,6 +588,7 @@
   },
   "transaction.state.log.min.isr": {
     "description": "Overridden min.insync.replicas config for the transaction topic.",
+    "scope": "broker",
     "type": "int",
     "default": "2",
     "valid_values": "[1,...]",
@@ -529,6 +597,7 @@
   },
   "transaction.state.log.num.partitions": {
     "description": "The number of partitions for the transaction topic (should not change after deployment).",
+    "scope": "broker",
     "type": "int",
     "default": "50",
     "valid_values": "[1,...]",
@@ -537,6 +606,7 @@
   },
   "transaction.state.log.replication.factor": {
     "description": "The replication factor for the transaction topic (set higher to ensure availability). Internal topic creation will fail until the cluster size meets this replication factor requirement.",
+    "scope": "broker",
     "type": "short",
     "default": "3",
     "valid_values": "[1,...]",
@@ -545,6 +615,7 @@
   },
   "transaction.state.log.segment.bytes": {
     "description": "The transaction topic segment bytes should be kept relatively small in order to facilitate faster log compaction and cache loads",
+    "scope": "broker",
     "type": "int",
     "default": "104857600",
     "valid_values": "[1,...]",
@@ -553,6 +624,7 @@
   },
   "transactional.id.expiration.ms": {
     "description": "The maximum amount of time in ms that the transaction coordinator will wait before proactively expire a producer's transactional id without receiving any transaction status updates from it.",
+    "scope": "broker",
     "type": "int",
     "default": "604800000",
     "valid_values": "[1,...]",
@@ -560,15 +632,18 @@
     "update_mode": "read-only"
   },
   "unclean.leader.election.enable": {
-    "description": "Indicates whether to enable replicas not in the ISR set to be elected as leader as a last resort, even though doing so may result in data loss",
+    "description": "Indicates whether to enable replicas not in the ISR set to be elected as leader as a last resort, even though doing so may result in data loss.",
+    "scope": "topic",
     "type": "boolean",
     "default": "false",
     "valid_values": null,
-    "importance": "high",
-    "update_mode": "cluster-wide"
+    "importance": "medium",
+    "update_mode": "cluster-wide",
+    "server_default_property": "unclean.leader.election.enable"
   },
   "zookeeper.connection.timeout.ms": {
     "description": "The max time that the client waits to establish a connection to zookeeper. If not set, the value in zookeeper.session.timeout.ms is used",
+    "scope": "broker",
     "type": "int",
     "default": "null",
     "valid_values": null,
@@ -577,6 +652,7 @@
   },
   "zookeeper.max.in.flight.requests": {
     "description": "The maximum number of unacknowledged requests the client will send to Zookeeper before blocking.",
+    "scope": "broker",
     "type": "int",
     "default": "10",
     "valid_values": "[1,...]",
@@ -585,6 +661,7 @@
   },
   "zookeeper.session.timeout.ms": {
     "description": "Zookeeper session timeout",
+    "scope": "broker",
     "type": "int",
     "default": "6000",
     "valid_values": null,
@@ -593,6 +670,7 @@
   },
   "zookeeper.set.acl": {
     "description": "Set client to use secure ACLs",
+    "scope": "broker",
     "type": "boolean",
     "default": "false",
     "valid_values": null,
@@ -601,6 +679,7 @@
   },
   "broker.id.generation.enable": {
     "description": "Enable automatic broker id generation on the server. When enabled the value configured for reserved.broker.max.id should be reviewed.",
+    "scope": "broker",
     "type": "boolean",
     "default": "true",
     "valid_values": null,
@@ -609,6 +688,7 @@
   },
   "broker.rack": {
     "description": "Rack of the broker. This will be used in rack aware replication assignment for fault tolerance. Examples: `RACK1`, `us-east-1d`",
+    "scope": "broker",
     "type": "string",
     "default": "null",
     "valid_values": null,
@@ -617,6 +697,7 @@
   },
   "connections.max.idle.ms": {
     "description": "Idle connections timeout: the server socket processor threads close the connections that idle more than this",
+    "scope": "broker",
     "type": "long",
     "default": "600000",
     "valid_values": null,
@@ -625,6 +706,7 @@
   },
   "connections.max.reauth.ms": {
     "description": "When explicitly set to a positive number (the default is 0, not a positive number), a session lifetime that will not exceed the configured value will be communicated to v2.2.0 or later clients when they authenticate. The broker will disconnect any such connection that is not re-authenticated within the session lifetime and that is then subsequently used for any purpose other than re-authentication. Configuration names can optionally be prefixed with listener prefix and SASL mechanism name in lower-case. For example, listener.name.sasl_ssl.oauthbearer.connections.max.reauth.ms=3600000",
+    "scope": "broker",
     "type": "long",
     "default": "0",
     "valid_values": null,
@@ -633,6 +715,7 @@
   },
   "controlled.shutdown.enable": {
     "description": "Enable controlled shutdown of the server",
+    "scope": "broker",
     "type": "boolean",
     "default": "true",
     "valid_values": null,
@@ -641,6 +724,7 @@
   },
   "controlled.shutdown.max.retries": {
     "description": "Controlled shutdown can fail for multiple reasons. This determines the number of retries when such failure happens",
+    "scope": "broker",
     "type": "int",
     "default": "3",
     "valid_values": null,
@@ -649,6 +733,7 @@
   },
   "controlled.shutdown.retry.backoff.ms": {
     "description": "Before each retry, the system needs time to recover from the state that caused the previous failure (Controller fail over, replica lag etc). This config determines the amount of time to wait before retrying.",
+    "scope": "broker",
     "type": "long",
     "default": "5000",
     "valid_values": null,
@@ -657,6 +742,7 @@
   },
   "controller.socket.timeout.ms": {
     "description": "The socket timeout for controller-to-broker channels",
+    "scope": "broker",
     "type": "int",
     "default": "30000",
     "valid_values": null,
@@ -665,6 +751,7 @@
   },
   "default.replication.factor": {
     "description": "default replication factors for automatically created topics",
+    "scope": "broker",
     "type": "int",
     "default": "1",
     "valid_values": null,
@@ -673,6 +760,7 @@
   },
   "delegation.token.expiry.time.ms": {
     "description": "The token validity time in miliseconds before the token needs to be renewed. Default value 1 day.",
+    "scope": "broker",
     "type": "long",
     "default": "86400000",
     "valid_values": "[1,...]",
@@ -681,6 +769,7 @@
   },
   "delegation.token.master.key": {
     "description": "Master/secret key to generate and verify delegation tokens. Same key must be configured across all the brokers.  If the key is not set or set to empty string, brokers will disable the delegation token support.",
+    "scope": "broker",
     "type": "password",
     "default": "null",
     "valid_values": null,
@@ -689,6 +778,7 @@
   },
   "delegation.token.max.lifetime.ms": {
     "description": "The token has a maximum lifetime beyond which it cannot be renewed anymore. Default value 7 days.",
+    "scope": "broker",
     "type": "long",
     "default": "604800000",
     "valid_values": "[1,...]",
@@ -697,6 +787,7 @@
   },
   "delete.records.purgatory.purge.interval.requests": {
     "description": "The purge interval (in number of requests) of the delete records request purgatory",
+    "scope": "broker",
     "type": "int",
     "default": "1",
     "valid_values": null,
@@ -705,6 +796,7 @@
   },
   "fetch.purgatory.purge.interval.requests": {
     "description": "The purge interval (in number of requests) of the fetch request purgatory",
+    "scope": "broker",
     "type": "int",
     "default": "1000",
     "valid_values": null,
@@ -713,6 +805,7 @@
   },
   "group.initial.rebalance.delay.ms": {
     "description": "The amount of time the group coordinator will wait for more consumers to join a new group before performing the first rebalance. A longer delay means potentially fewer rebalances, but increases the time until processing begins.",
+    "scope": "broker",
     "type": "int",
     "default": "3000",
     "valid_values": null,
@@ -721,6 +814,7 @@
   },
   "group.max.session.timeout.ms": {
     "description": "The maximum allowed session timeout for registered consumers. Longer timeouts give consumers more time to process messages in between heartbeats at the cost of a longer time to detect failures.",
+    "scope": "broker",
     "type": "int",
     "default": "300000",
     "valid_values": null,
@@ -729,6 +823,7 @@
   },
   "group.max.size": {
     "description": "The maximum number of consumers that a single consumer group can accommodate.",
+    "scope": "broker",
     "type": "int",
     "default": "2147483647",
     "valid_values": "[1,...]",
@@ -737,6 +832,7 @@
   },
   "group.min.session.timeout.ms": {
     "description": "The minimum allowed session timeout for registered consumers. Shorter timeouts result in quicker failure detection at the cost of more frequent consumer heartbeating, which can overwhelm broker resources.",
+    "scope": "broker",
     "type": "int",
     "default": "6000",
     "valid_values": null,
@@ -745,6 +841,7 @@
   },
   "inter.broker.listener.name": {
     "description": "Name of listener used for communication between brokers. If this is unset, the listener name is defined by security.inter.broker.protocol. It is an error to set this and security.inter.broker.protocol properties at the same time.",
+    "scope": "broker",
     "type": "string",
     "default": "null",
     "valid_values": null,
@@ -753,6 +850,7 @@
   },
   "inter.broker.protocol.version": {
     "description": "Specify which version of the inter-broker protocol will be used.\n This is typically bumped after all brokers were upgraded to a new version.\n Example of some valid values are: 0.8.0, 0.8.1, 0.8.1.1, 0.8.2, 0.8.2.0, 0.8.2.1, 0.9.0.0, 0.9.0.1 Check ApiVersion for the full list.",
+    "scope": "broker",
     "type": "string",
     "default": "2.2-IV1",
     "valid_values": "[0.8.0, 0.8.1, 0.8.2, 0.9.0, 0.10.0-IV0, 0.10.0-IV1, 0.10.1-IV0, 0.10.1-IV1, 0.10.1-IV2, 0.10.2-IV0, 0.11.0-IV0, 0.11.0-IV1, 0.11.0-IV2, 1.0-IV0, 1.1-IV0, 2.0-IV0, 2.0-IV1, 2.1-IV0, 2.1-IV1, 2.1-IV2, 2.2-IV0, 2.2-IV1]",
@@ -761,6 +859,7 @@
   },
   "log.cleaner.backoff.ms": {
     "description": "The amount of time to sleep when there are no logs to clean",
+    "scope": "broker",
     "type": "long",
     "default": "15000",
     "valid_values": "[0,...]",
@@ -769,6 +868,7 @@
   },
   "log.cleaner.dedupe.buffer.size": {
     "description": "The total memory used for log deduplication across all cleaner threads",
+    "scope": "broker",
     "type": "long",
     "default": "134217728",
     "valid_values": null,
@@ -777,6 +877,7 @@
   },
   "log.cleaner.delete.retention.ms": {
     "description": "How long are delete records retained?",
+    "scope": "broker",
     "type": "long",
     "default": "86400000",
     "valid_values": null,
@@ -785,6 +886,7 @@
   },
   "log.cleaner.enable": {
     "description": "Enable the log cleaner process to run on the server. Should be enabled if using any topics with a cleanup.policy=compact including the internal offsets topic. If disabled those topics will not be compacted and continually grow in size.",
+    "scope": "broker",
     "type": "boolean",
     "default": "true",
     "valid_values": null,
@@ -793,6 +895,7 @@
   },
   "log.cleaner.io.buffer.load.factor": {
     "description": "Log cleaner dedupe buffer load factor. The percentage full the dedupe buffer can become. A higher value will allow more log to be cleaned at once but will lead to more hash collisions",
+    "scope": "broker",
     "type": "double",
     "default": "0.9",
     "valid_values": null,
@@ -801,6 +904,7 @@
   },
   "log.cleaner.io.buffer.size": {
     "description": "The total memory used for log cleaner I/O buffers across all cleaner threads",
+    "scope": "broker",
     "type": "int",
     "default": "524288",
     "valid_values": "[0,...]",
@@ -809,6 +913,7 @@
   },
   "log.cleaner.io.max.bytes.per.second": {
     "description": "The log cleaner will be throttled so that the sum of its read and write i/o will be less than this value on average",
+    "scope": "broker",
     "type": "double",
     "default": "1.7976931348623157E308",
     "valid_values": null,
@@ -817,6 +922,7 @@
   },
   "log.cleaner.min.cleanable.ratio": {
     "description": "The minimum ratio of dirty log to total log for a log to eligible for cleaning",
+    "scope": "broker",
     "type": "double",
     "default": "0.5",
     "valid_values": null,
@@ -825,6 +931,7 @@
   },
   "log.cleaner.min.compaction.lag.ms": {
     "description": "The minimum time a message will remain uncompacted in the log. Only applicable for logs that are being compacted.",
+    "scope": "broker",
     "type": "long",
     "default": "0",
     "valid_values": null,
@@ -833,6 +940,7 @@
   },
   "log.cleaner.threads": {
     "description": "The number of background threads to use for log cleaning",
+    "scope": "broker",
     "type": "int",
     "default": "1",
     "valid_values": "[0,...]",
@@ -841,6 +949,7 @@
   },
   "log.cleanup.policy": {
     "description": "The default cleanup policy for segments beyond the retention window. A comma separated list of valid policies. Valid policies are: \"delete\" and \"compact\"",
+    "scope": "broker",
     "type": "list",
     "default": "delete",
     "valid_values": "[compact, delete]",
@@ -849,6 +958,7 @@
   },
   "log.index.interval.bytes": {
     "description": "The interval with which we add an entry to the offset index",
+    "scope": "broker",
     "type": "int",
     "default": "4096",
     "valid_values": "[0,...]",
@@ -857,6 +967,7 @@
   },
   "log.index.size.max.bytes": {
     "description": "The maximum size in bytes of the offset index",
+    "scope": "broker",
     "type": "int",
     "default": "10485760",
     "valid_values": "[4,...]",
@@ -865,6 +976,7 @@
   },
   "log.message.format.version": {
     "description": "Specify the message format version the broker will use to append messages to the logs. The value should be a valid ApiVersion. Some examples are: 0.8.2, 0.9.0.0, 0.10.0, check ApiVersion for more details. By setting a particular message format version, the user is certifying that all the existing messages on disk are smaller or equal than the specified version. Setting this value incorrectly will cause consumers with older versions to break as they will receive messages with a format that they don't understand.",
+    "scope": "broker",
     "type": "string",
     "default": "2.2-IV1",
     "valid_values": "[0.8.0, 0.8.1, 0.8.2, 0.9.0, 0.10.0-IV0, 0.10.0-IV1, 0.10.1-IV0, 0.10.1-IV1, 0.10.1-IV2, 0.10.2-IV0, 0.11.0-IV0, 0.11.0-IV1, 0.11.0-IV2, 1.0-IV0, 1.1-IV0, 2.0-IV0, 2.0-IV1, 2.1-IV0, 2.1-IV1, 2.1-IV2, 2.2-IV0, 2.2-IV1]",
@@ -873,6 +985,7 @@
   },
   "log.message.timestamp.difference.max.ms": {
     "description": "The maximum difference allowed between the timestamp when a broker receives a message and the timestamp specified in the message. If log.message.timestamp.type=CreateTime, a message will be rejected if the difference in timestamp exceeds this threshold. This configuration is ignored if log.message.timestamp.type=LogAppendTime.The maximum timestamp difference allowed should be no greater than log.retention.ms to avoid unnecessarily frequent log rolling.",
+    "scope": "broker",
     "type": "long",
     "default": "9223372036854775807",
     "valid_values": null,
@@ -881,6 +994,7 @@
   },
   "log.message.timestamp.type": {
     "description": "Define whether the timestamp in the message is message create time or log append time. The value should be either `CreateTime` or `LogAppendTime`",
+    "scope": "broker",
     "type": "string",
     "default": "CreateTime",
     "valid_values": "[CreateTime, LogAppendTime]",
@@ -889,6 +1003,7 @@
   },
   "log.preallocate": {
     "description": "Should pre allocate file when create new segment? If you are using Kafka on Windows, you probably need to set it to true.",
+    "scope": "broker",
     "type": "boolean",
     "default": "false",
     "valid_values": null,
@@ -897,6 +1012,7 @@
   },
   "log.retention.check.interval.ms": {
     "description": "The frequency in milliseconds that the log cleaner checks whether any log is eligible for deletion",
+    "scope": "broker",
     "type": "long",
     "default": "300000",
     "valid_values": "[1,...]",
@@ -905,6 +1021,7 @@
   },
   "max.connections.per.ip": {
     "description": "The maximum number of connections we allow from each ip address. This can be set to 0 if there are overrides configured using max.connections.per.ip.overrides property",
+    "scope": "broker",
     "type": "int",
     "default": "2147483647",
     "valid_values": "[0,...]",
@@ -913,6 +1030,7 @@
   },
   "max.connections.per.ip.overrides": {
     "description": "A comma-separated list of per-ip or hostname overrides to the default maximum number of connections. An example value is \"hostName:100,127.0.0.1:200\"",
+    "scope": "broker",
     "type": "string",
     "default": "\"\"",
     "valid_values": null,
@@ -921,6 +1039,7 @@
   },
   "max.incremental.fetch.session.cache.slots": {
     "description": "The maximum number of incremental fetch sessions that we will maintain.",
+    "scope": "broker",
     "type": "int",
     "default": "1000",
     "valid_values": "[0,...]",
@@ -929,6 +1048,7 @@
   },
   "num.partitions": {
     "description": "The default number of log partitions per topic",
+    "scope": "broker",
     "type": "int",
     "default": "1",
     "valid_values": "[1,...]",
@@ -937,6 +1057,7 @@
   },
   "password.encoder.old.secret": {
     "description": "The old secret that was used for encoding dynamically configured passwords. This is required only when the secret is updated. If specified, all dynamically encoded passwords are decoded using this old secret and re-encoded using password.encoder.secret when broker starts up.",
+    "scope": "broker",
     "type": "password",
     "default": "null",
     "valid_values": null,
@@ -945,6 +1066,7 @@
   },
   "password.encoder.secret": {
     "description": "The secret used for encoding dynamically configured passwords for this broker.",
+    "scope": "broker",
     "type": "password",
     "default": "null",
     "valid_values": null,
@@ -953,6 +1075,7 @@
   },
   "principal.builder.class": {
     "description": "The fully qualified name of a class that implements the KafkaPrincipalBuilder interface, which is used to build the KafkaPrincipal object used during authorization. This config also supports the deprecated PrincipalBuilder interface which was previously used for client authentication over SSL. If no principal builder is defined, the default behavior depends on the security protocol in use. For SSL authentication,  the principal will be derived using the rules defined by ssl.principal.mapping.rules applied on the distinguished name from the client certificate if one is provided; otherwise, if client authentication is not required, the principal name will be ANONYMOUS. For SASL authentication, the principal will be derived using the rules defined by sasl.kerberos.principal.to.local.rules if GSSAPI is in use, and the SASL authentication ID for other mechanisms. For PLAINTEXT, the principal will be ANONYMOUS.",
+    "scope": "broker",
     "type": "class",
     "default": "null",
     "valid_values": null,
@@ -961,6 +1084,7 @@
   },
   "producer.purgatory.purge.interval.requests": {
     "description": "The purge interval (in number of requests) of the producer request purgatory",
+    "scope": "broker",
     "type": "int",
     "default": "1000",
     "valid_values": null,
@@ -969,6 +1093,7 @@
   },
   "queued.max.request.bytes": {
     "description": "The number of queued bytes allowed before no more requests are read",
+    "scope": "broker",
     "type": "long",
     "default": "-1",
     "valid_values": null,
@@ -977,6 +1102,7 @@
   },
   "replica.fetch.backoff.ms": {
     "description": "The amount of time to sleep when fetch partition error occurs.",
+    "scope": "broker",
     "type": "int",
     "default": "1000",
     "valid_values": "[0,...]",
@@ -985,6 +1111,7 @@
   },
   "replica.fetch.max.bytes": {
     "description": "The number of bytes of messages to attempt to fetch for each partition. This is not an absolute maximum, if the first record batch in the first non-empty partition of the fetch is larger than this value, the record batch will still be returned to ensure that progress can be made. The maximum record batch size accepted by the broker is defined via message.max.bytes (broker config) or max.message.bytes (topic config).",
+    "scope": "broker",
     "type": "int",
     "default": "1048576",
     "valid_values": "[0,...]",
@@ -993,6 +1120,7 @@
   },
   "replica.fetch.response.max.bytes": {
     "description": "Maximum bytes expected for the entire fetch response. Records are fetched in batches, and if the first record batch in the first non-empty partition of the fetch is larger than this value, the record batch will still be returned to ensure that progress can be made. As such, this is not an absolute maximum. The maximum record batch size accepted by the broker is defined via message.max.bytes (broker config) or max.message.bytes (topic config).",
+    "scope": "broker",
     "type": "int",
     "default": "10485760",
     "valid_values": "[0,...]",
@@ -1001,6 +1129,7 @@
   },
   "reserved.broker.max.id": {
     "description": "Max number that can be used for a broker.id",
+    "scope": "broker",
     "type": "int",
     "default": "1000",
     "valid_values": "[0,...]",
@@ -1009,6 +1138,7 @@
   },
   "sasl.client.callback.handler.class": {
     "description": "The fully qualified name of a SASL client callback handler class that implements the AuthenticateCallbackHandler interface.",
+    "scope": "broker",
     "type": "class",
     "default": "null",
     "valid_values": null,
@@ -1017,6 +1147,7 @@
   },
   "sasl.enabled.mechanisms": {
     "description": "The list of SASL mechanisms enabled in the Kafka server. The list may contain any mechanism for which a security provider is available. Only GSSAPI is enabled by default.",
+    "scope": "broker",
     "type": "list",
     "default": "GSSAPI",
     "valid_values": null,
@@ -1025,6 +1156,7 @@
   },
   "sasl.jaas.config": {
     "description": "JAAS login context parameters for SASL connections in the format used by JAAS configuration files. JAAS configuration file format is described here. The format for the value is: 'loginModuleClass controlFlag (optionName=optionValue)*;'. For brokers, the config must be prefixed with listener prefix and SASL mechanism name in lower-case. For example, listener.name.sasl_ssl.scram-sha-256.sasl.jaas.config=com.example.ScramLoginModule required;",
+    "scope": "broker",
     "type": "password",
     "default": "null",
     "valid_values": null,
@@ -1033,6 +1165,7 @@
   },
   "sasl.kerberos.kinit.cmd": {
     "description": "Kerberos kinit command path.",
+    "scope": "broker",
     "type": "string",
     "default": "/usr/bin/kinit",
     "valid_values": null,
@@ -1041,6 +1174,7 @@
   },
   "sasl.kerberos.min.time.before.relogin": {
     "description": "Login thread sleep time between refresh attempts.",
+    "scope": "broker",
     "type": "long",
     "default": "60000",
     "valid_values": null,
@@ -1049,6 +1183,7 @@
   },
   "sasl.kerberos.principal.to.local.rules": {
     "description": "A list of rules for mapping from principal names to short names (typically operating system usernames). The rules are evaluated in order and the first rule that matches a principal name is used to map it to a short name. Any later rules in the list are ignored. By default, principal names of the form {username}/{hostname}@{REALM} are mapped to {username}. For more details on the format please see  security authorization and acls. Note that this configuration is ignored if an extension of KafkaPrincipalBuilder is provided by the principal.builder.class configuration.",
+    "scope": "broker",
     "type": "list",
     "default": "DEFAULT",
     "valid_values": null,
@@ -1057,6 +1192,7 @@
   },
   "sasl.kerberos.service.name": {
     "description": "The Kerberos principal name that Kafka runs as. This can be defined either in Kafka's JAAS config or in Kafka's config.",
+    "scope": "broker",
     "type": "string",
     "default": "null",
     "valid_values": null,
@@ -1065,6 +1201,7 @@
   },
   "sasl.kerberos.ticket.renew.jitter": {
     "description": "Percentage of random jitter added to the renewal time.",
+    "scope": "broker",
     "type": "double",
     "default": "0.05",
     "valid_values": null,
@@ -1073,6 +1210,7 @@
   },
   "sasl.kerberos.ticket.renew.window.factor": {
     "description": "Login thread will sleep until the specified window factor of time from last refresh to ticket's expiry has been reached, at which time it will try to renew the ticket.",
+    "scope": "broker",
     "type": "double",
     "default": "0.8",
     "valid_values": null,
@@ -1081,6 +1219,7 @@
   },
   "sasl.login.callback.handler.class": {
     "description": "The fully qualified name of a SASL login callback handler class that implements the AuthenticateCallbackHandler interface. For brokers, login callback handler config must be prefixed with listener prefix and SASL mechanism name in lower-case. For example, listener.name.sasl_ssl.scram-sha-256.sasl.login.callback.handler.class=com.example.CustomScramLoginCallbackHandler",
+    "scope": "broker",
     "type": "class",
     "default": "null",
     "valid_values": null,
@@ -1089,6 +1228,7 @@
   },
   "sasl.login.class": {
     "description": "The fully qualified name of a class that implements the Login interface. For brokers, login config must be prefixed with listener prefix and SASL mechanism name in lower-case. For example, listener.name.sasl_ssl.scram-sha-256.sasl.login.class=com.example.CustomScramLogin",
+    "scope": "broker",
     "type": "class",
     "default": "null",
     "valid_values": null,
@@ -1097,6 +1237,7 @@
   },
   "sasl.login.refresh.buffer.seconds": {
     "description": "The amount of buffer time before credential expiration to maintain when refreshing a credential, in seconds. If a refresh would otherwise occur closer to expiration than the number of buffer seconds then the refresh will be moved up to maintain as much of the buffer time as possible. Legal values are between 0 and 3600 (1 hour); a default value of  300 (5 minutes) is used if no value is specified. This value and sasl.login.refresh.min.period.seconds are both ignored if their sum exceeds the remaining lifetime of a credential. Currently applies only to OAUTHBEARER.",
+    "scope": "broker",
     "type": "short",
     "default": "300",
     "valid_values": null,
@@ -1105,6 +1246,7 @@
   },
   "sasl.login.refresh.min.period.seconds": {
     "description": "The desired minimum time for the login refresh thread to wait before refreshing a credential, in seconds. Legal values are between 0 and 900 (15 minutes); a default value of 60 (1 minute) is used if no value is specified.  This value and  sasl.login.refresh.buffer.seconds are both ignored if their sum exceeds the remaining lifetime of a credential. Currently applies only to OAUTHBEARER.",
+    "scope": "broker",
     "type": "short",
     "default": "60",
     "valid_values": null,
@@ -1113,6 +1255,7 @@
   },
   "sasl.login.refresh.window.factor": {
     "description": "Login refresh thread will sleep until the specified window factor relative to the credential's lifetime has been reached, at which time it will try to refresh the credential. Legal values are between 0.5 (50%) and 1.0 (100%) inclusive; a default value of 0.8 (80%) is used if no value is specified. Currently applies only to OAUTHBEARER.",
+    "scope": "broker",
     "type": "double",
     "default": "0.8",
     "valid_values": null,
@@ -1121,6 +1264,7 @@
   },
   "sasl.login.refresh.window.jitter": {
     "description": "The maximum amount of random jitter relative to the credential's lifetime that is added to the login refresh thread's sleep time. Legal values are between 0 and 0.25 (25%) inclusive; a default value of 0.05 (5%) is used if no value is specified. Currently applies only to OAUTHBEARER.",
+    "scope": "broker",
     "type": "double",
     "default": "0.05",
     "valid_values": null,
@@ -1129,6 +1273,7 @@
   },
   "sasl.mechanism.inter.broker.protocol": {
     "description": "SASL mechanism used for inter-broker communication. Default is GSSAPI.",
+    "scope": "broker",
     "type": "string",
     "default": "GSSAPI",
     "valid_values": null,
@@ -1137,6 +1282,7 @@
   },
   "sasl.server.callback.handler.class": {
     "description": "The fully qualified name of a SASL server callback handler class that implements the AuthenticateCallbackHandler interface. Server callback handlers must be prefixed with listener prefix and SASL mechanism name in lower-case. For example, listener.name.sasl_ssl.plain.sasl.server.callback.handler.class=com.example.CustomPlainCallbackHandler.",
+    "scope": "broker",
     "type": "class",
     "default": "null",
     "valid_values": null,
@@ -1145,6 +1291,7 @@
   },
   "security.inter.broker.protocol": {
     "description": "Security protocol used to communicate between brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL. It is an error to set this and inter.broker.listener.name properties at the same time.",
+    "scope": "broker",
     "type": "string",
     "default": "PLAINTEXT",
     "valid_values": null,
@@ -1153,6 +1300,7 @@
   },
   "ssl.cipher.suites": {
     "description": "A list of cipher suites. This is a named combination of authentication, encryption, MAC and key exchange algorithm used to negotiate the security settings for a network connection using TLS or SSL network protocol. By default all the available cipher suites are supported.",
+    "scope": "broker",
     "type": "list",
     "default": "\"\"",
     "valid_values": null,
@@ -1161,6 +1309,7 @@
   },
   "ssl.client.auth": {
     "description": "Configures kafka broker to request client authentication. The following settings are common:   ssl.client.auth=required If set to required client authentication is required. ssl.client.auth=requested This means client authentication is optional. unlike requested , if this option is set client can choose not to provide authentication information about itself ssl.client.auth=none This means client authentication is not needed.",
+    "scope": "broker",
     "type": "string",
     "default": "none",
     "valid_values": "[required, requested, none]",
@@ -1169,6 +1318,7 @@
   },
   "ssl.enabled.protocols": {
     "description": "The list of protocols enabled for SSL connections.",
+    "scope": "broker",
     "type": "list",
     "default": "TLSv1.2,TLSv1.1,TLSv1",
     "valid_values": null,
@@ -1177,6 +1327,7 @@
   },
   "ssl.key.password": {
     "description": "The password of the private key in the key store file. This is optional for client.",
+    "scope": "broker",
     "type": "password",
     "default": "null",
     "valid_values": null,
@@ -1185,6 +1336,7 @@
   },
   "ssl.keymanager.algorithm": {
     "description": "The algorithm used by key manager factory for SSL connections. Default value is the key manager factory algorithm configured for the Java Virtual Machine.",
+    "scope": "broker",
     "type": "string",
     "default": "SunX509",
     "valid_values": null,
@@ -1193,6 +1345,7 @@
   },
   "ssl.keystore.location": {
     "description": "The location of the key store file. This is optional for client and can be used for two-way authentication for client.",
+    "scope": "broker",
     "type": "string",
     "default": "null",
     "valid_values": null,
@@ -1201,6 +1354,7 @@
   },
   "ssl.keystore.password": {
     "description": "The store password for the key store file. This is optional for client and only needed if ssl.keystore.location is configured. ",
+    "scope": "broker",
     "type": "password",
     "default": "null",
     "valid_values": null,
@@ -1209,6 +1363,7 @@
   },
   "ssl.keystore.type": {
     "description": "The file format of the key store file. This is optional for client.",
+    "scope": "broker",
     "type": "string",
     "default": "JKS",
     "valid_values": null,
@@ -1217,6 +1372,7 @@
   },
   "ssl.protocol": {
     "description": "The SSL protocol used to generate the SSLContext. Default setting is TLS, which is fine for most cases. Allowed values in recent JVMs are TLS, TLSv1.1 and TLSv1.2. SSL, SSLv2 and SSLv3 may be supported in older JVMs, but their usage is discouraged due to known security vulnerabilities.",
+    "scope": "broker",
     "type": "string",
     "default": "TLS",
     "valid_values": null,
@@ -1225,6 +1381,7 @@
   },
   "ssl.provider": {
     "description": "The name of the security provider used for SSL connections. Default value is the default security provider of the JVM.",
+    "scope": "broker",
     "type": "string",
     "default": "null",
     "valid_values": null,
@@ -1233,6 +1390,7 @@
   },
   "ssl.trustmanager.algorithm": {
     "description": "The algorithm used by trust manager factory for SSL connections. Default value is the trust manager factory algorithm configured for the Java Virtual Machine.",
+    "scope": "broker",
     "type": "string",
     "default": "PKIX",
     "valid_values": null,
@@ -1241,6 +1399,7 @@
   },
   "ssl.truststore.location": {
     "description": "The location of the trust store file. ",
+    "scope": "broker",
     "type": "string",
     "default": "null",
     "valid_values": null,
@@ -1249,6 +1408,7 @@
   },
   "ssl.truststore.password": {
     "description": "The password for the trust store file. If a password is not set access to the truststore is still available, but integrity checking is disabled.",
+    "scope": "broker",
     "type": "password",
     "default": "null",
     "valid_values": null,
@@ -1257,6 +1417,7 @@
   },
   "ssl.truststore.type": {
     "description": "The file format of the trust store file.",
+    "scope": "broker",
     "type": "string",
     "default": "JKS",
     "valid_values": null,
@@ -1265,6 +1426,7 @@
   },
   "alter.config.policy.class.name": {
     "description": "The alter configs policy class that should be used for validation. The class should implement the org.apache.kafka.server.policy.AlterConfigPolicy interface.",
+    "scope": "broker",
     "type": "class",
     "default": "null",
     "valid_values": null,
@@ -1273,6 +1435,7 @@
   },
   "alter.log.dirs.replication.quota.window.num": {
     "description": "The number of samples to retain in memory for alter log dirs replication quotas",
+    "scope": "broker",
     "type": "int",
     "default": "11",
     "valid_values": "[1,...]",
@@ -1281,6 +1444,7 @@
   },
   "alter.log.dirs.replication.quota.window.size.seconds": {
     "description": "The time span of each sample for alter log dirs replication quotas",
+    "scope": "broker",
     "type": "int",
     "default": "1",
     "valid_values": "[1,...]",
@@ -1289,6 +1453,7 @@
   },
   "authorizer.class.name": {
     "description": "The authorizer class that should be used for authorization",
+    "scope": "broker",
     "type": "string",
     "default": "\"\"",
     "valid_values": null,
@@ -1297,6 +1462,7 @@
   },
   "client.quota.callback.class": {
     "description": "The fully qualified name of a class that implements the ClientQuotaCallback interface, which is used to determine quota limits applied to client requests. By default, ,  or  quotas stored in ZooKeeper are applied. For any given request, the most specific quota that matches the user principal of the session and the client-id of the request is applied.",
+    "scope": "broker",
     "type": "class",
     "default": "null",
     "valid_values": null,
@@ -1305,6 +1471,7 @@
   },
   "connection.failed.authentication.delay.ms": {
     "description": "Connection close delay on failed authentication: this is the time (in milliseconds) by which connection close will be delayed on authentication failure. This must be configured to be less than connections.max.idle.ms to prevent connection timeout.",
+    "scope": "broker",
     "type": "int",
     "default": "100",
     "valid_values": "[0,...]",
@@ -1313,6 +1480,7 @@
   },
   "create.topic.policy.class.name": {
     "description": "The create topic policy class that should be used for validation. The class should implement the org.apache.kafka.server.policy.CreateTopicPolicy interface.",
+    "scope": "broker",
     "type": "class",
     "default": "null",
     "valid_values": null,
@@ -1321,6 +1489,7 @@
   },
   "delegation.token.expiry.check.interval.ms": {
     "description": "Scan interval to remove expired delegation tokens.",
+    "scope": "broker",
     "type": "long",
     "default": "3600000",
     "valid_values": "[1,...]",
@@ -1329,6 +1498,7 @@
   },
   "kafka.metrics.polling.interval.secs": {
     "description": "The metrics polling interval (in seconds) which can be used in kafka.metrics.reporters implementations.",
+    "scope": "broker",
     "type": "int",
     "default": "10",
     "valid_values": "[1,...]",
@@ -1337,6 +1507,7 @@
   },
   "kafka.metrics.reporters": {
     "description": "A list of classes to use as Yammer metrics custom reporters. The reporters should implement kafka.metrics.KafkaMetricsReporter trait. If a client wants to expose JMX operations on a custom reporter, the custom reporter needs to additionally implement an MBean trait that extends kafka.metrics.KafkaMetricsReporterMBean trait so that the registered MBean is compliant with the standard MBean convention.",
+    "scope": "broker",
     "type": "list",
     "default": "\"\"",
     "valid_values": null,
@@ -1345,6 +1516,7 @@
   },
   "listener.security.protocol.map": {
     "description": "Map between listener names and security protocols. This must be defined for the same security protocol to be usable in more than one port or IP. For example, internal and external traffic can be separated even if SSL is required for both. Concretely, the user could define listeners with names INTERNAL and EXTERNAL and this property as: `INTERNAL:SSL,EXTERNAL:SSL`. As shown, key and value are separated by a colon and map entries are separated by commas. Each listener name should only appear once in the map. Different security (SSL and SASL) settings can be configured for each listener by adding a normalised prefix (the listener name is lowercased) to the config name. For example, to set a different keystore for the INTERNAL listener, a config with name listener.name.internal.ssl.keystore.location would be set. If the config for the listener name is not set, the config will fallback to the generic config (i.e. ssl.keystore.location). ",
+    "scope": "broker",
     "type": "string",
     "default": "PLAINTEXT:PLAINTEXT,SSL:SSL,SASL_PLAINTEXT:SASL_PLAINTEXT,SASL_SSL:SASL_SSL",
     "valid_values": null,
@@ -1353,6 +1525,7 @@
   },
   "log.message.downconversion.enable": {
     "description": "This configuration controls whether down-conversion of message formats is enabled to satisfy consume requests. When set to false, broker will not perform down-conversion for consumers expecting an older message format. The broker responds with UNSUPPORTED_VERSION error for consume requests from such older clients. This configurationdoes not apply to any message format conversion that might be required for replication to followers.",
+    "scope": "broker",
     "type": "boolean",
     "default": "true",
     "valid_values": null,
@@ -1361,6 +1534,7 @@
   },
   "metric.reporters": {
     "description": "A list of classes to use as metrics reporters. Implementing the org.apache.kafka.common.metrics.MetricsReporter interface allows plugging in classes that will be notified of new metric creation. The JmxReporter is always included to register JMX statistics.",
+    "scope": "broker",
     "type": "list",
     "default": "\"\"",
     "valid_values": null,
@@ -1369,6 +1543,7 @@
   },
   "metrics.num.samples": {
     "description": "The number of samples maintained to compute metrics.",
+    "scope": "broker",
     "type": "int",
     "default": "2",
     "valid_values": "[1,...]",
@@ -1377,6 +1552,7 @@
   },
   "metrics.recording.level": {
     "description": "The highest recording level for metrics.",
+    "scope": "broker",
     "type": "string",
     "default": "INFO",
     "valid_values": null,
@@ -1385,6 +1561,7 @@
   },
   "metrics.sample.window.ms": {
     "description": "The window of time a metrics sample is computed over.",
+    "scope": "broker",
     "type": "long",
     "default": "30000",
     "valid_values": "[1,...]",
@@ -1393,6 +1570,7 @@
   },
   "password.encoder.cipher.algorithm": {
     "description": "The Cipher algorithm used for encoding dynamically configured passwords.",
+    "scope": "broker",
     "type": "string",
     "default": "AES/CBC/PKCS5Padding",
     "valid_values": null,
@@ -1401,6 +1579,7 @@
   },
   "password.encoder.iterations": {
     "description": "The iteration count used for encoding dynamically configured passwords.",
+    "scope": "broker",
     "type": "int",
     "default": "4096",
     "valid_values": "[1024,...]",
@@ -1409,6 +1588,7 @@
   },
   "password.encoder.key.length": {
     "description": "The key length used for encoding dynamically configured passwords.",
+    "scope": "broker",
     "type": "int",
     "default": "128",
     "valid_values": "[8,...]",
@@ -1417,6 +1597,7 @@
   },
   "password.encoder.keyfactory.algorithm": {
     "description": "The SecretKeyFactory algorithm used for encoding dynamically configured passwords. Default is PBKDF2WithHmacSHA512 if available and PBKDF2WithHmacSHA1 otherwise.",
+    "scope": "broker",
     "type": "string",
     "default": "null",
     "valid_values": null,
@@ -1425,6 +1606,7 @@
   },
   "quota.window.num": {
     "description": "The number of samples to retain in memory for client quotas",
+    "scope": "broker",
     "type": "int",
     "default": "11",
     "valid_values": "[1,...]",
@@ -1433,6 +1615,7 @@
   },
   "quota.window.size.seconds": {
     "description": "The time span of each sample for client quotas",
+    "scope": "broker",
     "type": "int",
     "default": "1",
     "valid_values": "[1,...]",
@@ -1441,6 +1624,7 @@
   },
   "replication.quota.window.num": {
     "description": "The number of samples to retain in memory for replication quotas",
+    "scope": "broker",
     "type": "int",
     "default": "11",
     "valid_values": "[1,...]",
@@ -1449,6 +1633,7 @@
   },
   "replication.quota.window.size.seconds": {
     "description": "The time span of each sample for replication quotas",
+    "scope": "broker",
     "type": "int",
     "default": "1",
     "valid_values": "[1,...]",
@@ -1457,6 +1642,7 @@
   },
   "ssl.endpoint.identification.algorithm": {
     "description": "The endpoint identification algorithm to validate server hostname using server certificate. ",
+    "scope": "broker",
     "type": "string",
     "default": "https",
     "valid_values": null,
@@ -1465,6 +1651,7 @@
   },
   "ssl.principal.mapping.rules": {
     "description": "A list of rules for mapping from distinguished name from the client certificate to short name. The rules are evaluated in order and the first rule that matches a principal name is used to map it to a short name. Any later rules in the list are ignored. By default, distinguished name of the X.500 certificate will be the principal. For more details on the format please see  security authorization and acls. Note that this configuration is ignored if an extension of KafkaPrincipalBuilder is provided by the principal.builder.class configuration.",
+    "scope": "broker",
     "type": "list",
     "default": "DEFAULT",
     "valid_values": null,
@@ -1473,6 +1660,7 @@
   },
   "ssl.secure.random.implementation": {
     "description": "The SecureRandom PRNG implementation to use for SSL cryptography operations. ",
+    "scope": "broker",
     "type": "string",
     "default": "null",
     "valid_values": null,
@@ -1481,6 +1669,7 @@
   },
   "transaction.abort.timed.out.transaction.cleanup.interval.ms": {
     "description": "The interval at which to rollback transactions that have timed out",
+    "scope": "broker",
     "type": "int",
     "default": "60000",
     "valid_values": "[1,...]",
@@ -1489,6 +1678,7 @@
   },
   "transaction.remove.expired.transaction.cleanup.interval.ms": {
     "description": "The interval at which to remove transactions that have expired due to transactional.id.expiration.ms passing",
+    "scope": "broker",
     "type": "int",
     "default": "3600000",
     "valid_values": "[1,...]",
@@ -1497,10 +1687,209 @@
   },
   "zookeeper.sync.time.ms": {
     "description": "How far a ZK follower can be behind a ZK leader",
+    "scope": "broker",
     "type": "int",
     "default": "2000",
     "valid_values": null,
     "importance": "low",
     "update_mode": "read-only"
+  },
+  "cleanup.policy": {
+    "description": "A string that is either \"delete\" or \"compact\" or both. This string designates the retention policy to use on old log segments. The default policy (\"delete\") will discard old segments when their retention time or size limit has been reached. The \"compact\" setting will enable log compaction on the topic.",
+    "scope": "topic",
+    "type": "list",
+    "default": "delete",
+    "valid_values": "[compact, delete]",
+    "server_default_property": "log.cleanup.policy",
+    "importance": "medium"
+  },
+  "delete.retention.ms": {
+    "description": "The amount of time to retain delete tombstone markers for log compacted topics. This setting also gives a bound on the time in which a consumer must complete a read if they begin from offset 0 to ensure that they get a valid snapshot of the final stage (otherwise delete tombstones may be collected before they complete their scan).",
+    "scope": "topic",
+    "type": "long",
+    "default": "86400000",
+    "valid_values": "[0,...]",
+    "server_default_property": "log.cleaner.delete.retention.ms",
+    "importance": "medium"
+  },
+  "file.delete.delay.ms": {
+    "description": "The time to wait before deleting a file from the filesystem",
+    "scope": "topic",
+    "type": "long",
+    "default": "60000",
+    "valid_values": "[0,...]",
+    "server_default_property": "log.segment.delete.delay.ms",
+    "importance": "medium"
+  },
+  "flush.messages": {
+    "description": "This setting allows specifying an interval at which we will force an fsync of data written to the log. For example if this was set to 1 we would fsync after every message; if it were 5 we would fsync after every five messages. In general we recommend you not set this and use replication for durability and allow the operating system's background flush capabilities as it is more efficient. This setting can be overridden on a per-topic basis (see the per-topic configuration section).",
+    "scope": "topic",
+    "type": "long",
+    "default": "9223372036854775807",
+    "valid_values": "[0,...]",
+    "server_default_property": "log.flush.interval.messages",
+    "importance": "medium"
+  },
+  "flush.ms": {
+    "description": "This setting allows specifying a time interval at which we will force an fsync of data written to the log. For example if this was set to 1000 we would fsync after 1000 ms had passed. In general we recommend you not set this and use replication for durability and allow the operating system's background flush capabilities as it is more efficient.",
+    "scope": "topic",
+    "type": "long",
+    "default": "9223372036854775807",
+    "valid_values": "[0,...]",
+    "server_default_property": "log.flush.interval.ms",
+    "importance": "medium"
+  },
+  "follower.replication.throttled.replicas": {
+    "description": "A list of replicas for which log replication should be throttled on the follower side. The list should describe a set of replicas in the form [PartitionId]:[BrokerId],[PartitionId]:[BrokerId]:... or alternatively the wildcard '*' can be used to throttle all replicas for this topic.",
+    "scope": "topic",
+    "type": "list",
+    "default": "\"\"",
+    "valid_values": "[partitionId],[brokerId]:[partitionId],[brokerId]:...",
+    "server_default_property": "follower.replication.throttled.replicas",
+    "importance": "medium"
+  },
+  "index.interval.bytes": {
+    "description": "This setting controls how frequently Kafka adds an index entry to its offset index. The default setting ensures that we index a message roughly every 4096 bytes. More indexing allows reads to jump closer to the exact position in the log but makes the index larger. You probably don't need to change this.",
+    "scope": "topic",
+    "type": "int",
+    "default": "4096",
+    "valid_values": "[0,...]",
+    "server_default_property": "log.index.interval.bytes",
+    "importance": "medium"
+  },
+  "leader.replication.throttled.replicas": {
+    "description": "A list of replicas for which log replication should be throttled on the leader side. The list should describe a set of replicas in the form [PartitionId]:[BrokerId],[PartitionId]:[BrokerId]:... or alternatively the wildcard '*' can be used to throttle all replicas for this topic.",
+    "scope": "topic",
+    "type": "list",
+    "default": "\"\"",
+    "valid_values": "[partitionId],[brokerId]:[partitionId],[brokerId]:...",
+    "server_default_property": "leader.replication.throttled.replicas",
+    "importance": "medium"
+  },
+  "max.message.bytes": {
+    "description": "The largest record batch size allowed by Kafka. If this is increased and there are consumers older than 0.10.2, the consumers' fetch size must also be increased so that the they can fetch record batches this large.In the latest message format version, records are always grouped into batches for efficiency. In previous message format versions, uncompressed records are not grouped into batches and this limit only applies to a single record in that case.",
+    "scope": "topic",
+    "type": "int",
+    "default": "1000012",
+    "valid_values": "[0,...]",
+    "server_default_property": "message.max.bytes",
+    "importance": "medium"
+  },
+  "message.format.version": {
+    "description": "Specify the message format version the broker will use to append messages to the logs. The value should be a valid ApiVersion. Some examples are: 0.8.2, 0.9.0.0, 0.10.0, check ApiVersion for more details. By setting a particular message format version, the user is certifying that all the existing messages on disk are smaller or equal than the specified version. Setting this value incorrectly will cause consumers with older versions to break as they will receive messages with a format that they don't understand.",
+    "scope": "topic",
+    "type": "string",
+    "default": "2.2-IV1",
+    "valid_values": "[0.8.0, 0.8.1, 0.8.2, 0.9.0, 0.10.0-IV0, 0.10.0-IV1, 0.10.1-IV0, 0.10.1-IV1, 0.10.1-IV2, 0.10.2-IV0, 0.11.0-IV0, 0.11.0-IV1, 0.11.0-IV2, 1.0-IV0, 1.1-IV0, 2.0-IV0, 2.0-IV1, 2.1-IV0, 2.1-IV1, 2.1-IV2, 2.2-IV0, 2.2-IV1]",
+    "server_default_property": "log.message.format.version",
+    "importance": "medium"
+  },
+  "message.timestamp.difference.max.ms": {
+    "description": "The maximum difference allowed between the timestamp when a broker receives a message and the timestamp specified in the message. If message.timestamp.type=CreateTime, a message will be rejected if the difference in timestamp exceeds this threshold. This configuration is ignored if message.timestamp.type=LogAppendTime.",
+    "scope": "topic",
+    "type": "long",
+    "default": "9223372036854775807",
+    "valid_values": "[0,...]",
+    "server_default_property": "log.message.timestamp.difference.max.ms",
+    "importance": "medium"
+  },
+  "message.timestamp.type": {
+    "description": "Define whether the timestamp in the message is message create time or log append time. The value should be either `CreateTime` or `LogAppendTime`",
+    "scope": "topic",
+    "type": "string",
+    "default": "CreateTime",
+    "valid_values": "[CreateTime, LogAppendTime]",
+    "server_default_property": "log.message.timestamp.type",
+    "importance": "medium"
+  },
+  "min.cleanable.dirty.ratio": {
+    "description": "This configuration controls how frequently the log compactor will attempt to clean the log (assuming log compaction is enabled). By default we will avoid cleaning a log where more than 50% of the log has been compacted. This ratio bounds the maximum space wasted in the log by duplicates (at 50% at most 50% of the log could be duplicates). A higher ratio will mean fewer, more efficient cleanings but will mean more wasted space in the log.",
+    "scope": "topic",
+    "type": "double",
+    "default": "0.5",
+    "valid_values": "[0,...,1]",
+    "server_default_property": "log.cleaner.min.cleanable.ratio",
+    "importance": "medium"
+  },
+  "min.compaction.lag.ms": {
+    "description": "The minimum time a message will remain uncompacted in the log. Only applicable for logs that are being compacted.",
+    "scope": "topic",
+    "type": "long",
+    "default": "0",
+    "valid_values": "[0,...]",
+    "server_default_property": "log.cleaner.min.compaction.lag.ms",
+    "importance": "medium"
+  },
+  "preallocate": {
+    "description": "True if we should preallocate the file on disk when creating a new log segment.",
+    "scope": "topic",
+    "type": "boolean",
+    "default": "false",
+    "valid_values": null,
+    "server_default_property": "log.preallocate",
+    "importance": "medium"
+  },
+  "retention.bytes": {
+    "description": "This configuration controls the maximum size a partition (which consists of log segments) can grow to before we will discard old log segments to free up space if we are using the \"delete\" retention policy. By default there is no size limit only a time limit. Since this limit is enforced at the partition level, multiply it by the number of partitions to compute the topic retention in bytes.",
+    "scope": "topic",
+    "type": "long",
+    "default": "-1",
+    "valid_values": null,
+    "server_default_property": "log.retention.bytes",
+    "importance": "medium"
+  },
+  "retention.ms": {
+    "description": "This configuration controls the maximum time we will retain a log before we will discard old log segments to free up space if we are using the \"delete\" retention policy. This represents an SLA on how soon consumers must read their data. If set to -1, no time limit is applied.",
+    "scope": "topic",
+    "type": "long",
+    "default": "604800000",
+    "valid_values": "[-1,...]",
+    "server_default_property": "log.retention.ms",
+    "importance": "medium"
+  },
+  "segment.bytes": {
+    "description": "This configuration controls the segment file size for the log. Retention and cleaning is always done a file at a time so a larger segment size means fewer files but less granular control over retention.",
+    "scope": "topic",
+    "type": "int",
+    "default": "1073741824",
+    "valid_values": "[14,...]",
+    "server_default_property": "log.segment.bytes",
+    "importance": "medium"
+  },
+  "segment.index.bytes": {
+    "description": "This configuration controls the size of the index that maps offsets to file positions. We preallocate this index file and shrink it only after log rolls. You generally should not need to change this setting.",
+    "scope": "topic",
+    "type": "int",
+    "default": "10485760",
+    "valid_values": "[0,...]",
+    "server_default_property": "log.index.size.max.bytes",
+    "importance": "medium"
+  },
+  "segment.jitter.ms": {
+    "description": "The maximum random jitter subtracted from the scheduled segment roll time to avoid thundering herds of segment rolling",
+    "scope": "topic",
+    "type": "long",
+    "default": "0",
+    "valid_values": "[0,...]",
+    "server_default_property": "log.roll.jitter.ms",
+    "importance": "medium"
+  },
+  "segment.ms": {
+    "description": "This configuration controls the period of time after which Kafka will force the log to roll even if the segment file isn't full to ensure that retention can delete or compact old data.",
+    "scope": "topic",
+    "type": "long",
+    "default": "604800000",
+    "valid_values": "[1,...]",
+    "server_default_property": "log.roll.ms",
+    "importance": "medium"
+  },
+  "message.downconversion.enable": {
+    "description": "This configuration controls whether down-conversion of message formats is enabled to satisfy consume requests. When set to false, broker will not perform down-conversion for consumers expecting an older message format. The broker responds with UNSUPPORTED_VERSION error for consume requests from such older clients. This configurationdoes not apply to any message format conversion that might be required for replication to followers.",
+    "scope": "topic",
+    "type": "boolean",
+    "default": "true",
+    "valid_values": null,
+    "server_default_property": "log.message.downconversion.enable",
+    "importance": "low"
   }
 }

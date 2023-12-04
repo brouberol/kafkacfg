@@ -16,7 +16,54 @@ from bs4 import BeautifulSoup
 
 from kafkacfg.version import KAFKA_VERSIONS, KafkaVersion
 
+
+class BaseKafkaConfig:
+    @classmethod
+    def fields_for_version(cls, version):
+        return cls.fields.get(version, cls.fields["default"])
+
+
+class KafkaBrokerConfig(BaseKafkaConfig):
+    name = "broker"
+    fields = {
+        "default": ["type", "default", "valid_values", "importance", "update_mode"],
+        "v3": [
+            "description",
+            "type",
+            "default",
+            "valid_values",
+            "importance",
+        ],
+        "v2": ["default", "description"],
+        "v1": ["default", "description"],
+    }
+
+
+class KafkaTopicConfig(BaseKafkaConfig):
+    name = "topic"
+    fields = {
+        "default": [
+            "type",
+            "default",
+            "valid_values",
+            "server_default_property",
+            "importance",
+        ],
+        "v3": [
+            "default",
+            "server_default_property",
+            "description",
+        ],
+        "v2": [
+            "default",
+            "server_default_property",
+            "description",
+        ],
+    }
+
+
 KAFKA_DOCUMENTATION_URL = "https://kafka.apache.org/{version}/documentation.html"
+KAFKA_SECTIONS = [KafkaBrokerConfig, KafkaTopicConfig]
 
 
 def parse_args() -> argparse.Namespace:
@@ -69,98 +116,108 @@ def parse_kafka_configuration_page_v1(soup: BeautifulSoup) -> dict:
         config_name = extract_elt("td", tr, 0)
         config[config_name]["default"] = extract_elt("td", tr, 1)
         config[config_name]["description"] = extract_elt("td", tr, 2)
-    return config
-
-
-def parse_kafka_configuration_page_v2(soup: BeautifulSoup) -> dict:
-    config = defaultdict(dict)
-    table = soup.find("table", class_="data-table")
-    for i, tr in enumerate(table.find_all("tr")):
-        if i == 0:
-            continue
-        config_name = extract_elt("td", tr, 0)
-        if config_name:
-            config_name = config_name.replace("\u00c2\u00a0", "")
-        config[config_name]["description"] = extract_elt("td", tr, 1)
-        config[config_name]["type"] = extract_elt("td", tr, 2)
-        config[config_name]["default"] = extract_elt("td", tr, 3)
-        config[config_name]["valid_values"] = extract_elt("td", tr, 4)
-        config[config_name]["importance"] = extract_elt("td", tr, 5)
-        config[config_name]["update_mode"] = extract_elt("td", tr, 6)
+        config[config_name]["scope"] = (
+            KafkaTopicConfig.name
+            if "per-topic override" in config[config_name]["description"]
+            else KafkaBrokerConfig.name
+        )
     return config
 
 
 def parse_kafka_configuration_page_v3(soup: BeautifulSoup) -> dict:
     config = defaultdict(dict)
-    table = soup.find("table")
-    for i, tr in enumerate(table.find_all("tr")):
-        if i == 0:
-            continue
-        config_name = extract_elt("td", tr, 0)
-        if config_name:
-            config_name = config_name.replace("\u00c2\u00a0", "")
-        config[config_name]["description"] = extract_elt("td", tr, 1)
-        config[config_name]["type"] = extract_elt("td", tr, 2)
-        config[config_name]["default"] = extract_elt("td", tr, 3)
-        config[config_name]["valid_values"] = extract_elt("td", tr, 4)
-        config[config_name]["importance"] = extract_elt("td", tr, 5)
-        config[config_name]["update_mode"] = extract_elt("td", tr, 6)
+    for section, table in zip(
+        KAFKA_SECTIONS, soup.find_all("table", class_="data-table")
+    ):
+        for i, tr in enumerate(table.find_all("tr")):
+            if i == 0:
+                continue
+            config_name = extract_elt("td", tr, 0)
+            if config_name:
+                config_name = config_name.replace("\u00c2\u00a0", "")
+            config[config_name]["scope"] = section.name
+            for field_idx, field in enumerate(section.fields_for_version("v3"), 1):
+                config[config_name][field] = extract_elt("td", tr, field_idx)
+    return config
+
+
+def parse_kafka_configuration_page_v2(soup: BeautifulSoup) -> dict:
+    config = defaultdict(dict)
+    for section, table in zip(
+        KAFKA_SECTIONS, soup.find_all("table", class_="data-table")
+    ):
+        for i, tr in enumerate(table.find_all("tr")):
+            if i == 0:
+                continue
+            config_name = extract_elt("td", tr, 0)
+            if config_name:
+                config_name = config_name.replace("\u00c2\u00a0", "")
+            config[config_name]["scope"] = section.name
+            for field_idx, field in enumerate(section.fields_for_version("v2"), 1):
+                config[config_name][field] = extract_elt("td", tr, field_idx)
     return config
 
 
 def parse_kafka_configuration_page_v4(soup: BeautifulSoup) -> dict:
+    config = defaultdict(dict)
+    for section, table in zip(KAFKA_SECTIONS, soup.find_all("table")):
+        for i, tr in enumerate(table.find_all("tr")):
+            if i == 0:
+                continue
+            config_name = extract_elt("td", tr, 0)
+            if config_name:
+                config_name = config_name.replace("\u00c2\u00a0", "")
+            config[config_name]["description"] = extract_elt("td", tr, 1)
+            config[config_name]["scope"] = section.name
+            for field_idx, field in enumerate(section.fields_for_version("v4"), 2):
+                config[config_name][field] = extract_elt("td", tr, field_idx)
+    return config
+
+
+def parse_kafka_configuration_page_v5(soup: BeautifulSoup) -> dict:
     def post_processor(s: str) -> str:
         if ": " in s:
             return s.split(": ")[1]
         return s
 
     config = defaultdict(dict)
-    ul = soup.find("ul", class_="config-list")
-    for li in ul.find_all("li", recursive=False):
-        if li.find("b") is None:
-            continue
+    for section, ul in zip(KAFKA_SECTIONS, soup.find_all("ul", class_="config-list")):
+        for li in ul.find_all("li", recursive=False):
+            if li.find("b") is None:
+                continue
 
-        config_name = li.find("b").text.strip()
-        description_elts = list(
-            takewhile(lambda elt: elt.name != "ul", li.contents[1:])
-        )
-        description = " ".join([elt.text for elt in description_elts])
-        description = description.lstrip(":").strip()
-        config[config_name]["description"] = description
-        config_table = li.find("ul")
-        if not config_table:
-            continue
+            config_name = li.find("b").text.strip()
+            description_elts = list(
+                takewhile(lambda elt: elt.name != "ul", li.contents[1:])
+            )
+            description = " ".join([elt.text for elt in description_elts])
+            description = description.lstrip(":").strip()
+            config[config_name]["description"] = description
+            config_table = li.find("ul")
+            if not config_table:
+                continue
 
-        config[config_name]["type"] = extract_elt("li", config_table, 0, post_processor)
-        config[config_name]["default"] = extract_elt(
-            "li", config_table, 1, post_processor
-        )
-        config[config_name]["valid_values"] = extract_elt(
-            "li", config_table, 2, post_processor
-        )
-        config[config_name]["importance"] = extract_elt(
-            "li", config_table, 3, post_processor
-        )
-        config[config_name]["update_mode"] = extract_elt(
-            "li", config_table, 4, post_processor
-        )
+            config[config_name]["scope"] = section.name
+            for field_idx, field in enumerate(section.fields_for_version("v5")):
+                config[config_name][field] = extract_elt(
+                    "li", config_table, field_idx, post_processor
+                )
+
     return config
 
 
-def parse_kafka_configuration_page_v5(soup: BeautifulSoup) -> dict:
+def parse_kafka_configuration_page_v6(soup: BeautifulSoup) -> dict:
     config = defaultdict(dict)
-    ul = soup.find("ul", class_="config-list")
-    for li in ul.find_all("li"):
-        if not li.find("h4"):
-            continue
-        config_name = li.find("h4").text.strip()
-        config[config_name]["description"] = li.find("p").text.strip()
-        config_table = li.find("table")
-        config[config_name]["type"] = extract_elt("td", config_table, 0)
-        config[config_name]["default"] = extract_elt("td", config_table, 1)
-        config[config_name]["valid_values"] = extract_elt("td", config_table, 2)
-        config[config_name]["importance"] = extract_elt("td", config_table, 3)
-        config[config_name]["update_mode"] = extract_elt("td", config_table, 4)
+    for section, ul in zip(KAFKA_SECTIONS, soup.find_all("ul", class_="config-list")):
+        for li in ul.find_all("li"):
+            if not li.find("h4"):
+                continue
+            config_name = li.find("h4").text.strip()
+            config[config_name]["description"] = li.find("p").text.strip()
+            config_table = li.find("table")
+            config[config_name]["scope"] = section.name
+            for field_idx, field in enumerate(section.fields_for_version("v6")):
+                config[config_name][field] = extract_elt("td", config_table, field_idx)
     return config
 
 
@@ -172,12 +229,14 @@ def kafka_version_to_soup_extractor(version: KafkaVersion) -> Callable:
 
 def kafka_version_to_parser(version: KafkaVersion) -> Callable:
     if version >= KafkaVersion(2, 5, 0):
-        return parse_kafka_configuration_page_v5
+        return parse_kafka_configuration_page_v6
     if version >= KafkaVersion(2, 4, 0):
-        return parse_kafka_configuration_page_v4
+        return parse_kafka_configuration_page_v5
     if version >= KafkaVersion(0, 10, 1):
-        return parse_kafka_configuration_page_v3
+        return parse_kafka_configuration_page_v4
     if version >= KafkaVersion(0, 9, 0):
+        return parse_kafka_configuration_page_v3
+    if version >= KafkaVersion(0, 8, 1):
         return parse_kafka_configuration_page_v2
     if version >= KafkaVersion(0, 7, 0):
         return parse_kafka_configuration_page_v1
