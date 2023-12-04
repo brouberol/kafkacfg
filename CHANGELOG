@@ -5,8 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [0.3.0] - 2023-10-07
+## [0.4.0] - 2023-12-04
 
+### Added
+- Imported topic-level configurations, query-able via `scope=topic`
+- Added support for Kafka 3.6
+
+### Changed
+- the `config_file` argument of `kafkacfg filter` is now optional and was moved to `-c/--config-file`
+
+### Fixed
+- Improve error handling of non-existing `config_file` file on disk by relying on `click.Path`
+
+## [0.3.0] - 2023-10-07
 
 ### Added
 - `scripts/scrape_kafka_config.py` can now scrape all configuration pages in a single run via the `-k all` flag
