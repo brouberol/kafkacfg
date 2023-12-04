@@ -4,7 +4,7 @@ from collections import ChainMap
 
 from .broker import BrokerAttributes
 from .filter import Filter
-from .recommendation import Recommendation, recommendations
+from .recommendation import recommendations
 
 IGNORED_CONFIGS = (
     "broker.id",
