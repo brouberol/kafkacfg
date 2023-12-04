@@ -1,6 +1,6 @@
 # `kafkacfg`: Kafka configuration inspector
 
-Kafka has _a lot_ of parameters, tunables and knobs, and the [configuration page](https://kafka.apache.org/34/documentation.html#configuration) isn't the easiest to parse. `kafkacfg` allows you to parse your kafka configuration file help you understand what it does.
+Kafka has _a lot_ of parameters, tunables and knobs, and the [configuration page](https://kafka.apache.org/34/documentation.html#configuration) isn't the easiest to parse. `kafkacfg` allows you to analyze your kafka configuration file, to help you understand what it does.
 
 ### `kafkacfg explain`
 
