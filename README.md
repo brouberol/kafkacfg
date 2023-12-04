@@ -1,4 +1,4 @@
-# `kafkacfg`: Kafka configuration inspector
+# `kafkacfg`: Kafka configuration analyzer CLI
 
 Kafka has _a lot_ of parameters, tunables and knobs, and the [configuration page](https://kafka.apache.org/34/documentation.html#configuration) isn't the easiest to parse. `kafkacfg` allows you to analyze your kafka configuration file, to help you understand what it does.
 
