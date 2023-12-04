@@ -59,34 +59,38 @@ def explain(kafka_version: str, config_file: click.Path):
     help="A query used to select kafka tunables by their attributes",
     required=True,
 )
-@click.argument("config_file")
-def filter(kafka_version: str, query: str, config_file: str):
+@click.option("-c", "--config-file", type=click.Path(exists=True))
+def filter(kafka_version: str, query: str, config_file: click.Path):
     """Query kafka configuration tunables by their attributes
 
     Examples:
 
     \b
     # Fetch a config details by tunable name
-    $ kafkacfg filter --query name=replica.fetch.min.bytes -k 1.1 server.properties
+    $ kafkacfg filter --query name=replica.fetch.min.bytes -k 1.1
 
     \b
     # Fetch multiple config details by tunable name
-    $ kafkacfg filter --query name=replica.fetch.min.bytes,socket.request.max.bytes -k 1.1 server.properties
+    $ kafkacfg filter --query name=replica.fetch.min.bytes,socket.request.max.bytes -k 1.1
 
     \b
     # Fetch multiple config details by tunable name pattern
-    $ kafkacfg filter --query name=socket.*.buffer.bytes -k 1.1 server.properties
+    $ kafkacfg filter --query name=socket.*.buffer.bytes -k 1.1
 
     \b
     # Fetch a config details by importance
-    $ kafkacfg filter --query importance=high -k 1.1 server.properties
+    $ kafkacfg filter --query importance=high -k 1.1
 
     \b
     # Fetch multiple config details by importance and name pattern
-    $ kafkacfg filter --query importance=high;name=*.bytes -k 1.1 server.properties
+    $ kafkacfg filter --query importance=high;name=*.bytes -k 1.1
+
+    \b
+    # Fetch confifg details and compare results with config overrides
+    $ kafkacfg filter --query importance=high;name=*.bytes -k 1.1 -c server.properties
 
     """
-    config = parse_properties_config(Path(config_file))
+    config = parse_properties_config(Path(config_file)) if config_file else {}
     defaults = load_defaults(kafka_version)
     try:
         filtered_configs = filter_config_values(query, config, defaults)
