@@ -31,8 +31,8 @@ def kafkacfg():
 
 @kafkacfg.command()
 @kafka_version_choice
-@click.argument("config_file")
-def overrides(kafka_version: str, config_file: str):
+@click.argument("config_file", type=click.Path(exists=True))
+def overrides(kafka_version: str, config_file: click.Path):
     """Display the config overrides from a kafka configuration file"""
     config = parse_properties_config(Path(config_file))
     defaults = load_defaults(kafka_version)
@@ -42,8 +42,8 @@ def overrides(kafka_version: str, config_file: str):
 
 @kafkacfg.command()
 @kafka_version_choice
-@click.argument("config_file")
-def explain(kafka_version: str, config_file: str):
+@click.argument("config_file", type=click.Path(exists=True))
+def explain(kafka_version: str, config_file: click.Path):
     """Display information about each config tunable from a kafka configuration file"""
     config = parse_properties_config(Path(config_file))
     defaults = load_defaults(kafka_version)
@@ -110,9 +110,12 @@ def filter(kafka_version: str, query: str, config_file: str):
     help="The number of hard drives per broker",
     required=True,
 )
-@click.argument("config_file")
+@click.argument("config_file", type=click.Path(exists=True))
 def recommends(
-    kafka_version: str, config_file: str, broker_num_cpus: int, broker_num_disks: int
+    kafka_version: str,
+    config_file: click.Path,
+    broker_num_cpus: int,
+    broker_num_disks: int,
 ):
     """Emit sourced configuration recommendations based on broker attributes"""
     config = parse_properties_config(Path(config_file))
