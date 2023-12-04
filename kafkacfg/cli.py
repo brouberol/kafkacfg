@@ -13,7 +13,7 @@ from .config import (
 )
 from .exceptions import InvalidPredicateAttribute
 from .parser import parse_properties_config
-from .version import KAFKA_VERSIONS
+from .version import KAFKA_VERSIONS, __version__
 
 kafka_version_choice = click.option(
     "-k",
@@ -25,6 +25,7 @@ kafka_version_choice = click.option(
 
 
 @click.group()
+@click.version_option(__version__)
 def kafkacfg():
     """A kafka configuration inspector"""
 

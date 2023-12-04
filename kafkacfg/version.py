@@ -1,3 +1,5 @@
+__version__ = "0.4.0"
+
 from dataclasses import dataclass
 
 KAFKA_VERSIONS = (
