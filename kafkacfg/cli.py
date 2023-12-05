@@ -6,6 +6,7 @@ import click
 from .broker import BrokerAttributes
 from .config import (
     compute_config_overrides,
+    difference_between_versions,
     explain_config,
     filter_config_values,
     load_defaults,
@@ -131,3 +132,21 @@ def recommends(
     recos = recommend_config(config, defaults, broker_attrs)
     for i, reco in enumerate(recos, 1):
         click.echo(f"Recommendation {i}: set {reco}")
+
+
+@kafkacfg.command()
+@click.option(
+    "-f",
+    "--from-version",
+    type=click.Choice(KAFKA_VERSIONS),
+    help="The initial version",
+)
+@click.option(
+    "-t",
+    "--to-version",
+    type=click.Choice(KAFKA_VERSIONS),
+    help="The destination version",
+)
+def diff(from_version: str, to_version: str):
+    """Display the changes in configuration between 2 kafka versions"""
+    click.echo(json.dumps(difference_between_versions(from_version, to_version)))

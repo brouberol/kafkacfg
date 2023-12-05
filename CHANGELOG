@@ -7,16 +7,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
-## [0.4.0] - 2023-12-04
-
-
 ### Added
 - Added the `kafkacfg --version` flag
+- Added the `kafkacfg diff` command
 
 ### Changed
 
 ### Fixed
 
+
+## [0.4.0] - 2023-12-04
 
 ### Added
 - Imported topic-level configurations, query-able via `scope=topic`
@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - Improve error handling of non-existing `config_file` file on disk by relying on `click.Path`
+
 
 ## [0.3.0] - 2023-10-07
 
@@ -40,6 +41,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - make the `-k` flag required
 
+
 ## [0.2.0] - 2023-10-11
 
 ### Added
@@ -50,6 +52,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - Don't crash when a kafka configuration file contains a property not found in the configuration page
+
 
 ## [0.1.0] - 2023-10-01
 

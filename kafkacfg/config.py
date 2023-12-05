@@ -82,3 +82,67 @@ def recommend_config(
         ):
             recos.append(recommendation.render(vars(broker_attrs)))
     return recos
+
+
+def difference_between_versions(from_version: str, to_version: str) -> list:
+    """Compute the configuration delta between two versions.
+
+    This will highlight the configuration tunables:
+    - that have been introduced
+    - that have been deprecated
+    - which default value has changed
+
+    """
+    diff = []
+    old_defaults = load_defaults(kafka_version=from_version)
+    new_defaults = load_defaults(kafka_version=to_version)
+    new_flags = set(new_defaults) - set(old_defaults)
+    removed_flags = set(old_defaults) - set(new_defaults)
+    old_default_col = f"default ({from_version})"
+    new_default_col = f"default ({to_version})"
+    # Deprecated configs
+    for config_name, config_meta in old_defaults.items():
+        if config_name not in removed_flags:
+            continue
+        config_meta[old_default_col] = config_meta.pop("default")
+        config_meta[new_default_col] = "[REMOVED]"
+        config_meta = {
+            "name": config_name,
+            "status": "deprecated",
+        } | config_meta  # name 1st means that it will be in the first table column
+        diff.append(config_meta)
+
+    # New configs
+    for config_name, config_meta in new_defaults.items():
+        if config_name not in new_flags:
+            continue
+        config_meta[old_default_col] = "[ABSENT]"
+        config_meta[new_default_col] = config_meta.pop("default")
+        config_meta = {
+            "name": config_name,
+            "status": "new",
+        } | config_meta  # name 1st means that it will be in the first table column
+        diff.append(config_meta)
+
+    # Configs with new defaults
+    for config_name, config_meta in new_defaults.items():
+        if old_config_meta := old_defaults.get(config_name):
+            old_default = old_config_meta["default"]
+            new_default = config_meta["default"]
+            if old_default != new_default:
+                # sometimes old_default = 1234 and new_default = 1234 (xxx)
+                if (
+                    isinstance(new_default, str)
+                    and isinstance(old_default, str)
+                    and old_default in new_default
+                ):
+                    continue
+                config_meta[old_default_col] = old_default
+                config_meta[new_default_col] = config_meta.pop("default")
+                config_meta = {
+                    "name": config_name,
+                    "status": "changed",
+                } | config_meta  # name 1st means that it will be in the first table column
+                diff.append(config_meta)
+
+    return diff
