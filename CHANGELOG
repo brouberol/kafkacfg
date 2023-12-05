@@ -1,13 +1,14 @@
-
 # Changelog
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## [0.5.0] - 2023-12-05
 
 ### Added
+
 - Added the `kafkacfg --version` flag
 - Added the `kafkacfg diff` command
 
@@ -15,23 +16,25 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-
 ## [0.4.0] - 2023-12-04
 
 ### Added
+
 - Imported topic-level configurations, query-able via `scope=topic`
 - Added support for Kafka 3.6
 
 ### Changed
+
 - the `config_file` argument of `kafkacfg filter` is now optional and was moved to `-c/--config-file`
 
 ### Fixed
-- Improve error handling of non-existing `config_file` file on disk by relying on `click.Path`
 
+- Improve error handling of non-existing `config_file` file on disk by relying on `click.Path`
 
 ## [0.3.0] - 2023-10-07
 
 ### Added
+
 - `scripts/scrape_kafka_config.py` can now scrape all configuration pages in a single run via the `-k all` flag
 - `kafkacfg filter`: filters all configuration tunables and enrich the results with the tunable metadata and override
 - `kafkacfg recommends`: emit sourced recommendations for your kafka configuration based on broker attributes
@@ -39,20 +42,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
 ### Fixed
-- make the `-k` flag required
 
+- make the `-k` flag required
 
 ## [0.2.0] - 2023-10-11
 
 ### Added
+
 - `kafkacfg explain`: displays information about all configuration tunables in a kafka config file
 
 ### Changed
+
 - The output of `kafkacfg overrides` is now a JSON array, to make it easily pipe-able to `jtbl`
 
 ### Fixed
-- Don't crash when a kafka configuration file contains a property not found in the configuration page
 
+- Don't crash when a kafka configuration file contains a property not found in the configuration page
 
 ## [0.1.0] - 2023-10-01
 
