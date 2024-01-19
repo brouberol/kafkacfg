@@ -1,122 +1,236 @@
 {
-  "brokerid": {
-    "default": "none",
-    "description": "Each broker is uniquely identified by an id. This id serves as the brokers \"name\", and allows the broker to be moved to a different host/port without confusing consumers.",
-    "scope": "broker"
+  "broker": {
+    "brokerid": {
+      "default": "none",
+      "description": "Each broker is uniquely identified by an id. This id serves as the brokers \"name\", and allows the broker to be moved to a different host/port without confusing consumers.",
+      "scope": "broker"
+    },
+    "enable.zookeeper": {
+      "default": "true",
+      "description": "enable zookeeper registration in the server",
+      "scope": "broker"
+    },
+    "log.flush.interval": {
+      "default": "500",
+      "description": "Controls the number of messages accumulated in each topic (partition) before the data is flushed to disk and made available to consumers.",
+      "scope": "broker"
+    },
+    "log.default.flush.scheduler.interval.ms": {
+      "default": "3000",
+      "description": "Controls the interval at which logs are checked to see if they need to be flushed to disk. A background thread will run at a frequency specified by this parameter and will check each log to see if it has exceeded its flush.interval time, and if so it will flush it.",
+      "scope": "broker"
+    },
+    "log.default.flush.interval.ms ": {
+      "default": "log.default.flush.scheduler.interval.ms",
+      "description": "Controls the maximum time that a message in any topic is kept in memory before flushed to disk. The value only makes sense if it's a multiple of log.default.flush.scheduler.interval\n.ms",
+      "scope": "broker"
+    },
+    "topic.flush.intervals.ms": {
+      "default": "none",
+      "description": "Per-topic overrides for log.default.flush.interval.ms. Controls the maximum time that a message in selected topics is kept in memory before flushed to disk. The per-topic value only makes sense if it's a multiple of log.default.flush.scheduler.interval.ms. E.g., topic1:1000,topic2:2000",
+      "scope": "broker"
+    },
+    "log.retention.hours": {
+      "default": "168",
+      "description": "Controls how long a log file is retained.",
+      "scope": "broker"
+    },
+    "topic.log.retention.hours": {
+      "default": "none",
+      "description": "Topic-specific retention time that overrides log.retention.hours, e.g., topic1:10,topic2:20",
+      "scope": "broker"
+    },
+    "log.retention.size": {
+      "default": "-1",
+      "description": "the maximum size of the log before deleting it. This controls how large a log is allowed to grow",
+      "scope": "broker"
+    },
+    "log.cleanup.interval.mins": {
+      "default": "10",
+      "description": "Controls how often the log cleaner checks logs eligible for deletion. A log file is eligible for deletion if it hasn't been modified for log.retention.hours hours.",
+      "scope": "broker"
+    },
+    "log.dir": {
+      "default": "none",
+      "description": "Specifies the root directory in which all log data is kept.",
+      "scope": "broker"
+    },
+    "log.file.size": {
+      "default": "1*1024*1024*1024",
+      "description": "Controls the maximum size of a single log file.",
+      "scope": "broker"
+    },
+    "log.roll.hours": {
+      "default": "24 * 7",
+      "description": "The maximum time before a new log segment is rolled out",
+      "scope": "broker"
+    },
+    "max.socket.request.bytes": {
+      "default": "104857600",
+      "description": "the maximum number of bytes in a socket request",
+      "scope": "broker"
+    },
+    "monitoring.period.secs": {
+      "default": "600",
+      "description": "the interval in which to measure performance statistics",
+      "scope": "broker"
+    },
+    "num.threads": {
+      "default": "Runtime.getRuntime().availableProcessors",
+      "description": "Controls the number of worker threads in the broker to serve requests.",
+      "scope": "broker"
+    },
+    "num.partitions": {
+      "default": "1",
+      "description": "Specifies the default number of partitions per topic.",
+      "scope": "broker"
+    },
+    "socket.send.buffer": {
+      "default": "102400",
+      "description": "the SO_SNDBUFF buffer of the socket sever sockets",
+      "scope": "broker"
+    },
+    "socket.receive.buffer": {
+      "default": "102400",
+      "description": "the SO_RCVBUFF buffer of the socket sever sockets",
+      "scope": "broker"
+    },
+    "topic.partition.count.map": {
+      "default": "none",
+      "description": "Override parameter to control the number of partitions for selected topics. E.g., topic1:10,topic2:20",
+      "scope": "broker"
+    },
+    "zk.connect": {
+      "default": "localhost:2182/kafka",
+      "description": "Specifies the zookeeper connection string in the form hostname:port/chroot. Here the chroot is a base directory which is prepended to all path operations (this effectively namespaces all kafka znodes to allow sharing with other applications on the same zookeeper cluster)",
+      "scope": "broker"
+    },
+    "zk.connectiontimeout.ms ": {
+      "default": "6000",
+      "description": "Specifies the max time that the client waits to establish a connection to zookeeper.",
+      "scope": "broker"
+    },
+    "zk.sessiontimeout.ms ": {
+      "default": "6000",
+      "description": "The zookeeper session timeout.",
+      "scope": "broker"
+    },
+    "zk.synctime.ms": {
+      "default": "2000",
+      "description": "Max time for how far a ZK follower can be behind a ZK leader",
+      "scope": "broker"
+    }
   },
-  "enable.zookeeper": {
-    "default": "true",
-    "description": "enable zookeeper registration in the server",
-    "scope": "broker"
-  },
-  "log.flush.interval": {
-    "default": "500",
-    "description": "Controls the number of messages accumulated in each topic (partition) before the data is flushed to disk and made available to consumers.",
-    "scope": "broker"
-  },
-  "log.default.flush.scheduler.interval.ms": {
-    "default": "3000",
-    "description": "Controls the interval at which logs are checked to see if they need to be flushed to disk. A background thread will run at a frequency specified by this parameter and will check each log to see if it has exceeded its flush.interval time, and if so it will flush it.",
-    "scope": "broker"
-  },
-  "log.default.flush.interval.ms ": {
-    "default": "log.default.flush.scheduler.interval.ms",
-    "description": "Controls the maximum time that a message in any topic is kept in memory before flushed to disk. The value only makes sense if it's a multiple of log.default.flush.scheduler.interval\n.ms",
-    "scope": "broker"
-  },
-  "topic.flush.intervals.ms": {
-    "default": "none",
-    "description": "Per-topic overrides for log.default.flush.interval.ms. Controls the maximum time that a message in selected topics is kept in memory before flushed to disk. The per-topic value only makes sense if it's a multiple of log.default.flush.scheduler.interval.ms. E.g., topic1:1000,topic2:2000",
-    "scope": "broker"
-  },
-  "log.retention.hours": {
-    "default": "168",
-    "description": "Controls how long a log file is retained.",
-    "scope": "broker"
-  },
-  "topic.log.retention.hours": {
-    "default": "none",
-    "description": "Topic-specific retention time that overrides log.retention.hours, e.g., topic1:10,topic2:20",
-    "scope": "broker"
-  },
-  "log.retention.size": {
-    "default": "-1",
-    "description": "the maximum size of the log before deleting it. This controls how large a log is allowed to grow",
-    "scope": "broker"
-  },
-  "log.cleanup.interval.mins": {
-    "default": "10",
-    "description": "Controls how often the log cleaner checks logs eligible for deletion. A log file is eligible for deletion if it hasn't been modified for log.retention.hours hours.",
-    "scope": "broker"
-  },
-  "log.dir": {
-    "default": "none",
-    "description": "Specifies the root directory in which all log data is kept.",
-    "scope": "broker"
-  },
-  "log.file.size": {
-    "default": "1*1024*1024*1024",
-    "description": "Controls the maximum size of a single log file.",
-    "scope": "broker"
-  },
-  "log.roll.hours": {
-    "default": "24 * 7",
-    "description": "The maximum time before a new log segment is rolled out",
-    "scope": "broker"
-  },
-  "max.socket.request.bytes": {
-    "default": "104857600",
-    "description": "the maximum number of bytes in a socket request",
-    "scope": "broker"
-  },
-  "monitoring.period.secs": {
-    "default": "600",
-    "description": "the interval in which to measure performance statistics",
-    "scope": "broker"
-  },
-  "num.threads": {
-    "default": "Runtime.getRuntime().availableProcessors",
-    "description": "Controls the number of worker threads in the broker to serve requests.",
-    "scope": "broker"
-  },
-  "num.partitions": {
-    "default": "1",
-    "description": "Specifies the default number of partitions per topic.",
-    "scope": "broker"
-  },
-  "socket.send.buffer": {
-    "default": "102400",
-    "description": "the SO_SNDBUFF buffer of the socket sever sockets",
-    "scope": "broker"
-  },
-  "socket.receive.buffer": {
-    "default": "102400",
-    "description": "the SO_RCVBUFF buffer of the socket sever sockets",
-    "scope": "broker"
-  },
-  "topic.partition.count.map": {
-    "default": "none",
-    "description": "Override parameter to control the number of partitions for selected topics. E.g., topic1:10,topic2:20",
-    "scope": "broker"
-  },
-  "zk.connect": {
-    "default": "localhost:2182/kafka",
-    "description": "Specifies the zookeeper connection string in the form hostname:port/chroot. Here the chroot is a base directory which is prepended to all path operations (this effectively namespaces all kafka znodes to allow sharing with other applications on the same zookeeper cluster)",
-    "scope": "broker"
-  },
-  "zk.connectiontimeout.ms ": {
-    "default": "6000",
-    "description": "Specifies the max time that the client waits to establish a connection to zookeeper.",
-    "scope": "broker"
-  },
-  "zk.sessiontimeout.ms ": {
-    "default": "6000",
-    "description": "The zookeeper session timeout.",
-    "scope": "broker"
-  },
-  "zk.synctime.ms": {
-    "default": "2000",
-    "description": "Max time for how far a ZK follower can be behind a ZK leader",
-    "scope": "broker"
+  "producer": {
+    "serializer.class": {
+      "default": "kafka.serializer.DefaultEncoder. This is a no-op encoder. The serialization of data to Message should be handled outside the Producer",
+      "description": "class that implements the kafka.serializer.Encoder<T> interface, used to encode data of type T into a Kafka message ",
+      "scope": "producer"
+    },
+    "partitioner.class": {
+      "default": "kafka.producer.DefaultPartitioner<T> - uses the partitioning strategy hash(key)%num_partitions. If key is null, then it picks a random partition. ",
+      "description": "class that implements the kafka.producer.Partitioner<K>, used to supply a custom partitioning strategy on the message key (of type K) that is specified through the ProducerData<K, T> object in the kafka.producer.Producer<T> send API",
+      "scope": "producer"
+    },
+    "producer.type": {
+      "default": "sync",
+      "description": "this parameter specifies whether the messages are sent asynchronously or not. Valid values are - async for asynchronous batching send through kafka.producer.AyncProducersync for synchronous send through kafka.producer.SyncProducer",
+      "scope": "producer"
+    },
+    "broker.list": {
+      "default": "null. Either this parameter or zk.connect needs to be specified by the user.",
+      "description": "For bypassing zookeeper based auto partition discovery, use this config to pass in static broker and per-broker partition information. Format-brokerid1:host1:port1, brokerid2:host2:port2.\n\tIf you use this option, the partitioner.class will be ignored and each producer request will be routed to a random broker partition.",
+      "scope": "producer"
+    },
+    "zk.connect": {
+      "default": "null. Either this parameter or broker.partition.info needs to be specified by the user",
+      "description": "For using the zookeeper based automatic broker discovery, use this config to pass in the zookeeper connection url to the zookeeper cluster where the Kafka brokers are registered.",
+      "scope": "producer"
+    },
+    "buffer.size": {
+      "default": "102400",
+      "description": "the socket buffer size, in bytes",
+      "scope": "producer"
+    },
+    "connect.timeout.ms": {
+      "default": "5000",
+      "description": "the maximum time spent by kafka.producer.SyncProducer trying to connect to the kafka broker. Once it elapses, the producer throws an ERROR and stops.",
+      "scope": "producer"
+    },
+    "socket.timeout.ms": {
+      "default": "30000",
+      "description": "The socket timeout in milliseconds",
+      "scope": "producer"
+    },
+    "reconnect.interval ": {
+      "default": "30000",
+      "description": "the number of produce requests after which kafka.producer.SyncProducer tears down the socket connection to the broker and establishes it again; this and the following property are mainly used when the producer connects to the brokers through a VIP in a load balancer; they give the producer a chance to pick up the new broker periodically",
+      "scope": "producer"
+    },
+    "reconnect.time.interval.ms ": {
+      "default": "10 * 1000 * 1000",
+      "description": "the amount of time after which kafka.producer.SyncProducer tears down the socket connection to the broker and establishes it again; negative reconnect time interval means disabling this time-based reconnect feature",
+      "scope": "producer"
+    },
+    "max.message.size ": {
+      "default": "1000000",
+      "description": "the maximum number of bytes that the kafka.producer.SyncProducer can send as a single message payload",
+      "scope": "producer"
+    },
+    "compression.codec": {
+      "default": "0 (No compression)",
+      "description": "This parameter allows you to specify the compression codec for all data generated by this producer.",
+      "scope": "producer"
+    },
+    "compressed.topics": {
+      "default": "null",
+      "description": "This parameter allows you to set whether compression should be turned on for particular topics. If the compression codec is anything other than NoCompressionCodec, enable compression only for specified topics if any. If the list of compressed topics is empty, then enable the specified compression codec for all topics. If the compression codec is NoCompressionCodec, compression is disabled for all topics. ",
+      "scope": "producer"
+    },
+    "zk.read.num.retries": {
+      "default": "3",
+      "description": "The producer using the zookeeper software load balancer maintains a ZK cache that gets updated by the zookeeper watcher listeners. During some events like a broker bounce, the producer ZK cache can get into an inconsistent state, for a small time period. In this time period, it could end up picking a broker partition that is unavailable. When this happens, the ZK cache needs to be updated. This parameter specifies the number of times the producer attempts to refresh this ZK cache.",
+      "scope": "producer"
+    },
+    "\n\tOptions for Asynchronous Producers (producer.type=async)\n\t": {
+      "default": null,
+      "description": null,
+      "scope": "producer"
+    },
+    "queue.time": {
+      "default": "5000",
+      "description": "maximum time, in milliseconds, for buffering data on the producer queue. After it elapses, the buffered data in the producer queue is dispatched to the event.handler.",
+      "scope": "producer"
+    },
+    "queue.size": {
+      "default": "10000",
+      "description": "the maximum size of the blocking queue for buffering on the  kafka.producer.AsyncProducer",
+      "scope": "producer"
+    },
+    "batch.size ": {
+      "default": "200",
+      "description": "the number of messages batched at the producer, before being dispatched to the event.handler",
+      "scope": "producer"
+    },
+    "event.handler": {
+      "default": "kafka.producer.async.EventHandler<T>",
+      "description": "the class that implements kafka.producer.async.IEventHandler<T> used to dispatch a batch of produce requests, using an instance of kafka.producer.SyncProducer.\n",
+      "scope": "producer"
+    },
+    "event.handler.props": {
+      "default": "null",
+      "description": "the java.util.Properties() object used to initialize the custom event.handler through its init() API",
+      "scope": "producer"
+    },
+    "callback.handler": {
+      "default": "null",
+      "description": "the class that implements kafka.producer.async.CallbackHandler<T> used to inject callbacks at various stages of the kafka.producer.AsyncProducer pipeline.\n",
+      "scope": "producer"
+    },
+    "callback.handler.props": {
+      "default": "null",
+      "description": "the java.util.Properties() object used to initialize the custom callback.handler through its init() API",
+      "scope": "producer"
+    }
   }
 }

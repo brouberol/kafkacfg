@@ -62,8 +62,53 @@ class KafkaTopicConfig(BaseKafkaConfig):
     }
 
 
+class KafkaProducerConfig(BaseKafkaConfig):
+    name = "producer"
+    fields = {
+        "default": [
+            "type",
+            "default",
+            "valid_values",
+            "importance",
+        ],
+        "v3": [
+            "default",
+            "description",
+        ],
+        "v2": [
+            "default",
+            "description",
+        ],
+    }
+
+
+class KafkaConsumerConfig(BaseKafkaConfig):
+    name = "consumer"
+    fields = {
+        "default": [
+            "type",
+            "default",
+            "valid_values",
+            "importance",
+        ],
+        "v3": [
+            "default",
+            "description",
+        ],
+        "v2": [
+            "default",
+            "description",
+        ],
+    }
+
+
 KAFKA_DOCUMENTATION_URL = "https://kafka.apache.org/{version}/documentation.html"
-KAFKA_SECTIONS = [KafkaBrokerConfig, KafkaTopicConfig]
+KAFKA_SECTIONS = [
+    KafkaBrokerConfig,
+    KafkaTopicConfig,
+    KafkaProducerConfig,
+    KafkaConsumerConfig,
+]
 
 
 def parse_args() -> argparse.Namespace:
@@ -108,24 +153,29 @@ def extract_elt(elt: str, table, index: int, post_processor=None) -> str | None:
 
 
 def parse_kafka_configuration_page_v1(soup: BeautifulSoup) -> dict:
-    config = defaultdict(dict)
-    table = soup.find("table", class_="data-table")
-    for i, tr in enumerate(table.find_all("tr")):
-        if i == 0:
+    config = defaultdict(lambda: defaultdict(dict))
+    for section, table in zip(
+        KAFKA_SECTIONS, soup.find_all("table", class_="data-table")
+    ):
+        if section.name == "topic":
             continue
-        config_name = extract_elt("td", tr, 0)
-        config[config_name]["default"] = extract_elt("td", tr, 1)
-        config[config_name]["description"] = extract_elt("td", tr, 2)
-        config[config_name]["scope"] = (
-            KafkaTopicConfig.name
-            if "per-topic override" in config[config_name]["description"]
-            else KafkaBrokerConfig.name
-        )
+        for i, tr in enumerate(table.find_all("tr")):
+            if i == 0:
+                continue
+            config_name = extract_elt("td", tr, 0)
+            config[section.name][config_name]["default"] = extract_elt("td", tr, 1)
+            config[section.name][config_name]["description"] = extract_elt("td", tr, 2)
+            config[section.name][config_name]["scope"] = (
+                KafkaTopicConfig.name
+                if "per-topic override"
+                in (config[section.name][config_name]["description"] or "")
+                else section.name
+            )
     return config
 
 
 def parse_kafka_configuration_page_v3(soup: BeautifulSoup) -> dict:
-    config = defaultdict(dict)
+    config = defaultdict(lambda: defaultdict(dict))
     for section, table in zip(
         KAFKA_SECTIONS, soup.find_all("table", class_="data-table")
     ):
@@ -135,14 +185,16 @@ def parse_kafka_configuration_page_v3(soup: BeautifulSoup) -> dict:
             config_name = extract_elt("td", tr, 0)
             if config_name:
                 config_name = config_name.replace("\u00c2\u00a0", "")
-            config[config_name]["scope"] = section.name
+            config[section.name][config_name]["scope"] = section.name
             for field_idx, field in enumerate(section.fields_for_version("v3"), 1):
-                config[config_name][field] = extract_elt("td", tr, field_idx)
+                config[section.name][config_name][field] = extract_elt(
+                    "td", tr, field_idx
+                )
     return config
 
 
 def parse_kafka_configuration_page_v2(soup: BeautifulSoup) -> dict:
-    config = defaultdict(dict)
+    config = defaultdict(lambda: defaultdict(dict))
     for section, table in zip(
         KAFKA_SECTIONS, soup.find_all("table", class_="data-table")
     ):
@@ -152,14 +204,16 @@ def parse_kafka_configuration_page_v2(soup: BeautifulSoup) -> dict:
             config_name = extract_elt("td", tr, 0)
             if config_name:
                 config_name = config_name.replace("\u00c2\u00a0", "")
-            config[config_name]["scope"] = section.name
+            config[section.name][config_name]["scope"] = section.name
             for field_idx, field in enumerate(section.fields_for_version("v2"), 1):
-                config[config_name][field] = extract_elt("td", tr, field_idx)
+                config[section.name][config_name][field] = extract_elt(
+                    "td", tr, field_idx
+                )
     return config
 
 
 def parse_kafka_configuration_page_v4(soup: BeautifulSoup) -> dict:
-    config = defaultdict(dict)
+    config = defaultdict(lambda: defaultdict(dict))
     for section, table in zip(KAFKA_SECTIONS, soup.find_all("table")):
         for i, tr in enumerate(table.find_all("tr")):
             if i == 0:
@@ -167,10 +221,12 @@ def parse_kafka_configuration_page_v4(soup: BeautifulSoup) -> dict:
             config_name = extract_elt("td", tr, 0)
             if config_name:
                 config_name = config_name.replace("\u00c2\u00a0", "")
-            config[config_name]["description"] = extract_elt("td", tr, 1)
-            config[config_name]["scope"] = section.name
+            config[section.name][config_name]["description"] = extract_elt("td", tr, 1)
+            config[section.name][config_name]["scope"] = section.name
             for field_idx, field in enumerate(section.fields_for_version("v4"), 2):
-                config[config_name][field] = extract_elt("td", tr, field_idx)
+                config[section.name][config_name][field] = extract_elt(
+                    "td", tr, field_idx
+                )
     return config
 
 
@@ -180,7 +236,7 @@ def parse_kafka_configuration_page_v5(soup: BeautifulSoup) -> dict:
             return s.split(": ")[1]
         return s
 
-    config = defaultdict(dict)
+    config = defaultdict(lambda: defaultdict(dict))
     for section, ul in zip(KAFKA_SECTIONS, soup.find_all("ul", class_="config-list")):
         for li in ul.find_all("li", recursive=False):
             if li.find("b") is None:
@@ -192,14 +248,14 @@ def parse_kafka_configuration_page_v5(soup: BeautifulSoup) -> dict:
             )
             description = " ".join([elt.text for elt in description_elts])
             description = description.lstrip(":").strip()
-            config[config_name]["description"] = description
+            config[section.name][config_name]["description"] = description
             config_table = li.find("ul")
             if not config_table:
                 continue
 
-            config[config_name]["scope"] = section.name
+            config[section.name][config_name]["scope"] = section.name
             for field_idx, field in enumerate(section.fields_for_version("v5")):
-                config[config_name][field] = extract_elt(
+                config[section.name][config_name][field] = extract_elt(
                     "li", config_table, field_idx, post_processor
                 )
 
@@ -207,17 +263,19 @@ def parse_kafka_configuration_page_v5(soup: BeautifulSoup) -> dict:
 
 
 def parse_kafka_configuration_page_v6(soup: BeautifulSoup) -> dict:
-    config = defaultdict(dict)
+    config = defaultdict(lambda: defaultdict(dict))
     for section, ul in zip(KAFKA_SECTIONS, soup.find_all("ul", class_="config-list")):
         for li in ul.find_all("li"):
             if not li.find("h4"):
                 continue
             config_name = li.find("h4").text.strip()
-            config[config_name]["description"] = li.find("p").text.strip()
+            config[section.name][config_name]["description"] = li.find("p").text.strip()
             config_table = li.find("table")
-            config[config_name]["scope"] = section.name
+            config[section.name][config_name]["scope"] = section.name
             for field_idx, field in enumerate(section.fields_for_version("v6")):
-                config[config_name][field] = extract_elt("td", config_table, field_idx)
+                config[section.name][config_name][field] = extract_elt(
+                    "td", config_table, field_idx
+                )
     return config
 
 
