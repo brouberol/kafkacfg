@@ -24,6 +24,14 @@ kafka_version_choice = click.option(
     required=True,
 )
 
+config_type_choice = click.option(
+    "-c",
+    "--config-type",
+    type=click.Choice(("broker", "consumer", "producer", "topic")),
+    help="The type of configuration to evaluate",
+    default="broker",
+)
+
 
 @click.group()
 @click.version_option(__version__)
@@ -33,22 +41,24 @@ def kafkacfg():
 
 @kafkacfg.command()
 @kafka_version_choice
+@config_type_choice
 @click.argument("config_file", type=click.Path(exists=True))
-def overrides(kafka_version: str, config_file: click.Path):
+def overrides(kafka_version: str, config_file: click.Path, config_type: str):
     """Display the config overrides from a kafka configuration file"""
     config = parse_properties_config(Path(config_file))
-    defaults = load_defaults(kafka_version)
+    defaults = load_defaults(kafka_version)[config_type]
     config_overrides = compute_config_overrides(config, defaults)
     click.echo(json.dumps(config_overrides))
 
 
 @kafkacfg.command()
 @kafka_version_choice
+@config_type_choice
 @click.argument("config_file", type=click.Path(exists=True))
-def explain(kafka_version: str, config_file: click.Path):
+def explain(kafka_version: str, config_file: click.Path, config_type: str):
     """Display information about each config tunable from a kafka configuration file"""
     config = parse_properties_config(Path(config_file))
-    defaults = load_defaults(kafka_version)
+    defaults = load_defaults(kafka_version)[config_type]
     config_overrides = explain_config(config, defaults)
     click.echo(json.dumps(config_overrides))
 
@@ -147,6 +157,9 @@ def recommends(
     type=click.Choice(KAFKA_VERSIONS),
     help="The destination version",
 )
-def diff(from_version: str, to_version: str):
+@config_type_choice
+def diff(from_version: str, to_version: str, config_type: str):
     """Display the changes in configuration between 2 kafka versions"""
-    click.echo(json.dumps(difference_between_versions(from_version, to_version)))
+    click.echo(
+        json.dumps(difference_between_versions(from_version, to_version, config_type))
+    )

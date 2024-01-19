@@ -48,18 +48,22 @@ def explain_config(config: dict, defaults: dict) -> list:
     return explained_config
 
 
-def filter_config_values(filter_str: str, config: dict, defaults: dict) -> dict:
-    matching_configs = {}
+def filter_config_values(filter_str: str, config: dict, defaults: dict) -> list:
+    output = []
     config_filter = Filter.from_str(filter_str)
-    for config_name, config_value in defaults.items():
-        for predicate in config_filter.predicates:
-            full_config_value = config_value | {"name": config_name}
-            if not predicate.matches(full_config_value):
-                break
-        else:
-            matching_configs[config_name] = config.get(config_name)
+    for section_defaults in defaults.values():
+        matching_configs = {}
+        for config_name, config_value in section_defaults.items():
+            for predicate in config_filter.predicates:
+                full_config_value = config_value | {"name": config_name}
+                if not predicate.matches(full_config_value):
+                    break
+            else:
+                matching_configs[config_name] = config.get(config_name)
 
-    return explain_config(matching_configs, defaults)
+        if matching_configs:
+            output.extend(explain_config(matching_configs, section_defaults))
+    return output
 
 
 def recommend_config(
@@ -68,7 +72,8 @@ def recommend_config(
     """Inspect the broker configuration and recommend some configuration tweaks"""
     recos = []
     defaults_kv = {
-        cfg_name: cfg_data["default"] for cfg_name, cfg_data in defaults.items()
+        cfg_name: cfg_data["default"]
+        for cfg_name, cfg_data in defaults["broker"].items()
     }
     broker_config = ChainMap(config, defaults_kv)
     for recommendation in recommendations:
@@ -84,7 +89,9 @@ def recommend_config(
     return recos
 
 
-def difference_between_versions(from_version: str, to_version: str) -> list:
+def difference_between_versions(
+    from_version: str, to_version: str, config_type: str
+) -> list:
     """Compute the configuration delta between two versions.
 
     This will highlight the configuration tunables:
@@ -96,12 +103,13 @@ def difference_between_versions(from_version: str, to_version: str) -> list:
     diff = []
     old_defaults = load_defaults(kafka_version=from_version)
     new_defaults = load_defaults(kafka_version=to_version)
-    new_flags = set(new_defaults) - set(old_defaults)
-    removed_flags = set(old_defaults) - set(new_defaults)
+    new_flags = set(new_defaults[config_type]) - set(old_defaults[config_type])
+    removed_flags = set(old_defaults[config_type]) - set(new_defaults[config_type])
     old_default_col = f"default ({from_version})"
     new_default_col = f"default ({to_version})"
+
     # Deprecated configs
-    for config_name, config_meta in old_defaults.items():
+    for config_name, config_meta in old_defaults[config_type].items():
         if config_name not in removed_flags:
             continue
         config_meta[old_default_col] = config_meta.pop("default")
@@ -113,7 +121,7 @@ def difference_between_versions(from_version: str, to_version: str) -> list:
         diff.append(config_meta)
 
     # New configs
-    for config_name, config_meta in new_defaults.items():
+    for config_name, config_meta in new_defaults[config_type].items():
         if config_name not in new_flags:
             continue
         config_meta[old_default_col] = "[ABSENT]"
@@ -125,7 +133,7 @@ def difference_between_versions(from_version: str, to_version: str) -> list:
         diff.append(config_meta)
 
     # Configs with new defaults
-    for config_name, config_meta in new_defaults.items():
+    for config_name, config_meta in new_defaults[config_type].items():
         if old_config_meta := old_defaults.get(config_name):
             old_default = old_config_meta["default"]
             new_default = config_meta["default"]
@@ -139,10 +147,13 @@ def difference_between_versions(from_version: str, to_version: str) -> list:
                     continue
                 config_meta[old_default_col] = old_default
                 config_meta[new_default_col] = config_meta.pop("default")
-                config_meta = {
-                    "name": config_name,
-                    "status": "changed",
-                } | config_meta  # name 1st means that it will be in the first table column
+                config_meta = (
+                    {
+                        "name": config_name,
+                        "status": "changed",
+                    }
+                    | config_meta
+                )  # name 1st means that it will be in the first table column
                 diff.append(config_meta)
 
     return diff

@@ -1,122 +1,150 @@
 {
+  "broker": {
+    "brokerid": {
+      "default": "none"
+    },
+    "description": "Max time for how far a ZK follower can be behind a ZK leader",
+    "scope": "broker",
+    "enable.zookeeper": {
+      "default": "true"
+    },
+    "log.flush.interval": {
+      "default": "500"
+    },
+    "log.default.flush.scheduler.interval.ms": {
+      "default": "3000"
+    },
+    "log.default.flush.interval.ms ": {
+      "default": "log.default.flush.scheduler.interval.ms"
+    },
+    "topic.flush.intervals.ms": {
+      "default": "none"
+    },
+    "log.retention.hours": {
+      "default": "168"
+    },
+    "topic.log.retention.hours": {
+      "default": "none"
+    },
+    "log.retention.size": {
+      "default": "-1"
+    },
+    "log.cleanup.interval.mins": {
+      "default": "10"
+    },
+    "log.dir": {
+      "default": "none"
+    },
+    "log.file.size": {
+      "default": "1*1024*1024*1024"
+    },
+    "log.roll.hours": {
+      "default": "24 * 7"
+    },
+    "max.socket.request.bytes": {
+      "default": "104857600"
+    },
+    "monitoring.period.secs": {
+      "default": "600"
+    },
+    "num.threads": {
+      "default": "Runtime.getRuntime().availableProcessors"
+    },
+    "num.partitions": {
+      "default": "1"
+    },
+    "socket.send.buffer": {
+      "default": "102400"
+    },
+    "socket.receive.buffer": {
+      "default": "102400"
+    },
+    "topic.partition.count.map": {
+      "default": "none"
+    },
+    "zk.connect": {
+      "default": "localhost:2182/kafka"
+    },
+    "zk.connectiontimeout.ms ": {
+      "default": "6000"
+    },
+    "zk.sessiontimeout.ms ": {
+      "default": "6000"
+    },
+    "zk.synctime.ms": {
+      "default": "2000"
+    }
+  },
   "brokerid": {
-    "default": "none",
-    "description": "Each broker is uniquely identified by an id. This id serves as the brokers \"name\", and allows the broker to be moved to a different host/port without confusing consumers.",
-    "scope": "broker"
+    "description": {}
   },
   "enable.zookeeper": {
-    "default": "true",
-    "description": "enable zookeeper registration in the server",
-    "scope": "broker"
+    "description": {}
   },
   "log.flush.interval": {
-    "default": "500",
-    "description": "Controls the number of messages accumulated in each topic (partition) before the data is flushed to disk and made available to consumers.",
-    "scope": "broker"
+    "description": {}
   },
   "log.default.flush.scheduler.interval.ms": {
-    "default": "3000",
-    "description": "Controls the interval at which logs are checked to see if they need to be flushed to disk. A background thread will run at a frequency specified by this parameter and will check each log to see if it has exceeded its flush.interval time, and if so it will flush it.",
-    "scope": "broker"
+    "description": {}
   },
   "log.default.flush.interval.ms ": {
-    "default": "log.default.flush.scheduler.interval.ms",
-    "description": "Controls the maximum time that a message in any topic is kept in memory before flushed to disk. The value only makes sense if it's a multiple of log.default.flush.scheduler.interval\n.ms",
-    "scope": "broker"
+    "description": {}
   },
   "topic.flush.intervals.ms": {
-    "default": "none",
-    "description": "Per-topic overrides for log.default.flush.interval.ms. Controls the maximum time that a message in selected topics is kept in memory before flushed to disk. The per-topic value only makes sense if it's a multiple of log.default.flush.scheduler.interval.ms. E.g., topic1:1000,topic2:2000",
-    "scope": "broker"
+    "description": {}
   },
   "log.retention.hours": {
-    "default": "168",
-    "description": "Controls how long a log file is retained.",
-    "scope": "broker"
+    "description": {}
   },
   "topic.log.retention.hours": {
-    "default": "none",
-    "description": "Topic-specific retention time that overrides log.retention.hours, e.g., topic1:10,topic2:20",
-    "scope": "broker"
+    "description": {}
   },
   "log.retention.size": {
-    "default": "-1",
-    "description": "the maximum size of the log before deleting it. This controls how large a log is allowed to grow",
-    "scope": "broker"
+    "description": {}
   },
   "log.cleanup.interval.mins": {
-    "default": "10",
-    "description": "Controls how often the log cleaner checks logs eligible for deletion. A log file is eligible for deletion if it hasn't been modified for log.retention.hours hours.",
-    "scope": "broker"
+    "description": {}
   },
   "log.dir": {
-    "default": "none",
-    "description": "Specifies the root directory in which all log data is kept.",
-    "scope": "broker"
+    "description": {}
   },
   "log.file.size": {
-    "default": "1*1024*1024*1024",
-    "description": "Controls the maximum size of a single log file.",
-    "scope": "broker"
+    "description": {}
   },
   "log.roll.hours": {
-    "default": "24 * 7",
-    "description": "The maximum time before a new log segment is rolled out",
-    "scope": "broker"
+    "description": {}
   },
   "max.socket.request.bytes": {
-    "default": "104857600",
-    "description": "the maximum number of bytes in a socket request",
-    "scope": "broker"
+    "description": {}
   },
   "monitoring.period.secs": {
-    "default": "600",
-    "description": "the interval in which to measure performance statistics",
-    "scope": "broker"
+    "description": {}
   },
   "num.threads": {
-    "default": "Runtime.getRuntime().availableProcessors",
-    "description": "Controls the number of worker threads in the broker to serve requests.",
-    "scope": "broker"
+    "description": {}
   },
   "num.partitions": {
-    "default": "1",
-    "description": "Specifies the default number of partitions per topic.",
-    "scope": "broker"
+    "description": {}
   },
   "socket.send.buffer": {
-    "default": "102400",
-    "description": "the SO_SNDBUFF buffer of the socket sever sockets",
-    "scope": "broker"
+    "description": {}
   },
   "socket.receive.buffer": {
-    "default": "102400",
-    "description": "the SO_RCVBUFF buffer of the socket sever sockets",
-    "scope": "broker"
+    "description": {}
   },
   "topic.partition.count.map": {
-    "default": "none",
-    "description": "Override parameter to control the number of partitions for selected topics. E.g., topic1:10,topic2:20",
-    "scope": "broker"
+    "description": {}
   },
   "zk.connect": {
-    "default": "localhost:2182/kafka",
-    "description": "Specifies the zookeeper connection string in the form hostname:port/chroot. Here the chroot is a base directory which is prepended to all path operations (this effectively namespaces all kafka znodes to allow sharing with other applications on the same zookeeper cluster)",
-    "scope": "broker"
+    "description": {}
   },
   "zk.connectiontimeout.ms ": {
-    "default": "6000",
-    "description": "Specifies the max time that the client waits to establish a connection to zookeeper.",
-    "scope": "broker"
+    "description": {}
   },
   "zk.sessiontimeout.ms ": {
-    "default": "6000",
-    "description": "The zookeeper session timeout.",
-    "scope": "broker"
+    "description": {}
   },
   "zk.synctime.ms": {
-    "default": "2000",
-    "description": "Max time for how far a ZK follower can be behind a ZK leader",
-    "scope": "broker"
+    "description": {}
   }
 }
