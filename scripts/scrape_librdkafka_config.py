@@ -56,6 +56,14 @@ def parse_configuration_file() -> dict:
                 values = [value.strip() for value in line.split("|")]
                 property_data = dict(zip(headers, values))
                 property_name = property_data.pop("property")
+                if "<br>*Type:" in property_data["description"]:
+                    property_description = property_data.pop("description")
+                    property_description, property_type = property_description.split(
+                        "<br>*Type:"
+                    )
+                    property_type = property_type.rstrip("*").strip()
+                    property_data["description"] = property_description
+                    property_data["type"] = property_type
                 if consumer_producer_property := property_data.pop("c/p", None):
                     for scope in c_p_value_to_scopes[consumer_producer_property]:
                         configuration[scope][property_name] = property_data | {
