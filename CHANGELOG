@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+
+
+## [0.7.0] - 2024-01-21
+
+### Added
+- Added support for `librdkafka` configuration querying, explaining, diffing, etc
+
+### Changed
+- renamed `kafkacfg filter` to `kafkacfg query`
+- changed the `kafkacfg filter --query` option to an argument
+
+
 ## [0.6.0] - 2024-01-19
 
 ### Added
