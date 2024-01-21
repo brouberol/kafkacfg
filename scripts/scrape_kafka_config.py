@@ -308,7 +308,7 @@ def scrape_kafka_config(version: str):
     parser = kafka_version_to_parser(version)
     config = parser(soup)
     out_filepath = (
-        Path(__file__).parent.parent / "kafkacfg" / "data" / f"{version}.json"
+        Path(__file__).parent.parent / "kafkacfg" / "data" / "kafka" / f"{version}.json"
     )
     with open(out_filepath, "w") as out:
         json.dump(config, out, indent=2)

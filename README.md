@@ -2,12 +2,16 @@
 
 Kafka has _a lot_ of parameters, tunables and knobs, and the [configuration page](https://kafka.apache.org/documentation/#brokerconfigs) isn't the easiest to parse. `kafkacfg` allows you to analyze your kafka configuration file, to help you understand what it does.
 
+> [!NOTE]
+> all `kafkacfg` commands (except `kafkacfg recommends`) can be passed a `--source librdkafka` argument, to work on the `librdkafka` [configuration parameters](https://github.com/confluentinc/librdkafka/blob/master/CONFIGURATION.md) instead of the [Kafka parameters](https://kafka.apache.org/documentation/#brokerconfigs)
+
+
 ### `kafkacfg explain`
 
 This command is used to display extra information about each configuration tunable used in your configuration file.
 
 ```console
-$ cat test.properties
+$ cat samples/server.properties
 num.io.threads = 10
 broker.id = 1001
 auto.create.topics.enable = false
@@ -15,7 +19,7 @@ background.threads = 10
 ```
 
 ```console
-$ kafkacfg explain -k 3.4 test.properties | jq .
+$ kafkacfg explain -k 3.4 samples/server.properties | jq .
 [
   {
     "name": "num.io.threads",
@@ -67,7 +71,7 @@ $ kafkacfg explain -k 3.4 test.properties | jq .
 This format makes it easy to pipe it through table formatting tools such as `jtbl`:
 
 ```console
-$ kafkacfg explain -k 3.4 test.properties | jtbl
+$ kafkacfg explain -k 3.4 samples/server.properties | jtbl
 ╒═══════════════════════════╤════════════╤═══════════════════════════════════════════════════════════════════════╤═════════╤═════════╤═══════════╤════════════════╤══════════════╤═══════════════╕
 │ name                      │ override   │ description                                                           │ scope   │ type    │ default   │ valid_values   │ importance   │ update_mode   │
 ╞═══════════════════════════╪════════════╪═══════════════════════════════════════════════════════════════════════╪═════════╪═════════╪═══════════╪════════════════╪══════════════╪═══════════════╡
@@ -114,7 +118,7 @@ $ kafkacfg explain -k 1.1 --config-type producer producer.properties  | jtbl
 The `overrides` command will only display and enrich the configuration tunables with non-default values, to help you understand in what way your kafka configuration was tuned:
 
 ```console
-$ kafkacfg overrides -k 3.4 test.properties | jtbl
+$ kafkacfg overrides -k 3.4 samples/server.properties | jtbl
 name                       override    description                                                                                     scope    type     default    valid_values    importance    update_mode
 -------------------------  ----------  ----------------------------------------------------------------------------------------------  -------  -------  ---------  --------------  ------------  -------------
 num.io.threads             10          The number of threads that the server uses for processing requests, which may include disk I/O  broker   int      8          [1,...]         high          cluster-wide
@@ -123,12 +127,12 @@ auto.create.topics.enable  false       Enable auto creation of topic on the serv
 
 You can also explain producer and consumer level configurations override, by using the `-c / --config-type` flag.
 
-### `kafkacfg filter`
+### `kafkacfg query`
 
-The `filter` command allows you to filter the kafka configuration tunables with a custom query, while enriching the filter results with the usual metadata and potential override value.
+The `query` command allows you to filter the kafka configuration tunables with a custom query, while enriching the filter results with the usual metadata and potential override value.
 
 ```console
-$ kafkacfg filter --query name=replica.fetch.min.bytes -k 1.1 | jtbl
+$ kafkacfg query -v 1.1 'name=replica.fetch.min.bytes' | jtbl
 name                     override    description                                                                                           scope    type      default  valid_values    importance    update_mode
 -----------------------  ----------  ----------------------------------------------------------------------------------------------------  -------  ------  ---------  --------------  ------------  -------------
 replica.fetch.min.bytes              Minimum bytes expected for each fetch response. If not enough bytes, wait up to replicaMaxWaitTimeMs  broker   int             1                  high          read-only
@@ -137,7 +141,7 @@ replica.fetch.min.bytes              Minimum bytes expected for each fetch respo
 You can also compose filter predicates and even use `*` for a glob match:
 
 ```console
-$ kafkacfg filter --query "name=replica.*.bytes;importance=high" -k 3.4 | jtbl
+$ kafkacfg query -v 3.4 "name=replica.*.bytes;importance=high" | jtbl
 ╒═════════════════════════════════════╤════════════╤═══════════════════════════════════════════════════╤═════════╤════════╤══════════════════════╤════════════════╤══════════════╤═══════════════╕
 │ name                                │ override   │ description                                       │ scope   │ type   │ default              │ valid_values   │ importance   │ update_mode   │
 ╞═════════════════════════════════════╪════════════╪═══════════════════════════════════════════════════╪═════════╪════════╪══════════════════════╪════════════════╪══════════════╪═══════════════╡

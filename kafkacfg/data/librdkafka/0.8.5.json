@@ -1,0 +1,391 @@
+{
+  "consumer": {
+    "client.id": {
+      "default": "rdkafka",
+      "description": "Client identifier.",
+      "scope": "consumer"
+    },
+    "metadata.broker.list": {
+      "default": "",
+      "description": "Initial list of brokers. The application may also use `rd_kafka_brokers_add()` to add brokers during runtime.",
+      "scope": "consumer"
+    },
+    "message.max.bytes": {
+      "default": "4000000",
+      "description": "Maximum transmit message size.",
+      "scope": "consumer"
+    },
+    "receive.message.max.bytes": {
+      "default": "100000000",
+      "description": "Maximum receive message size. This is a safety precaution to avoid memory exhaustion in case of protocol hickups. The value should be at least fetch.message.max.bytes * number of partitions consumed from + messaging overhead (e.g. 200000 bytes).",
+      "scope": "consumer"
+    },
+    "metadata.request.timeout.ms": {
+      "default": "60000",
+      "description": "Non-topic request timeout in milliseconds. This is for metadata requests, etc.",
+      "scope": "consumer"
+    },
+    "topic.metadata.refresh.interval.ms": {
+      "default": "10000",
+      "description": "Topic metadata refresh interval in milliseconds. The metadata is automatically refreshed on error and connect. Use -1 to disable the intervalled refresh.",
+      "scope": "consumer"
+    },
+    "topic.metadata.refresh.fast.cnt": {
+      "default": "10",
+      "description": "When a topic looses its leader this number of metadata requests are sent with `topic.metadata.refresh.fast.interval.ms` interval disregarding the `topic.metadata.refresh.interval.ms` value. This is used to recover quickly from transitioning leader brokers.",
+      "scope": "consumer"
+    },
+    "topic.metadata.refresh.fast.interval.ms": {
+      "default": "250",
+      "description": "See `topic.metadata.refresh.fast.cnt` description",
+      "scope": "consumer"
+    },
+    "topic.metadata.refresh.sparse": {
+      "default": "false",
+      "description": "Sparse metadata requests (consumes less network bandwidth)",
+      "scope": "consumer"
+    },
+    "debug": {
+      "default": "",
+      "description": "A comma-separated list of debug contexts to enable: all,generic,broker,topic,metadata,producer,queue,msg,protocol",
+      "scope": "consumer"
+    },
+    "socket.timeout.ms": {
+      "default": "60000",
+      "description": "Timeout for network requests.",
+      "scope": "consumer"
+    },
+    "socket.send.buffer.bytes": {
+      "default": "0",
+      "description": "Broker socket send buffer size. System default is used if 0.",
+      "scope": "consumer"
+    },
+    "socket.receive.buffer.bytes": {
+      "default": "0",
+      "description": "Broker socket receive buffer size. System default is used if 0.",
+      "scope": "consumer"
+    },
+    "socket.keepalive.enable": {
+      "default": "false",
+      "description": "Enable TCP keep-alives (SO_KEEPALIVE) on broker sockets",
+      "scope": "consumer"
+    },
+    "socket.max.fails": {
+      "default": "3",
+      "description": "Disconnect from broker when this number of send failures (e.g., timed out requests) is reached. Disable with 0. NOTE: The connection is automatically re-established.",
+      "scope": "consumer"
+    },
+    "broker.address.ttl": {
+      "default": "300000",
+      "description": "How long to cache the broker address resolving results.",
+      "scope": "consumer"
+    },
+    "broker.address.family": {
+      "default": "any",
+      "description": "Allowed broker IP address families: any, v4, v6",
+      "scope": "consumer"
+    },
+    "statistics.interval.ms": {
+      "default": "0",
+      "description": "librdkafka statistics emit interval. The application also needs to register a stats callback using `rd_kafka_conf_set_stats_cb()`. The granularity is 1000ms. A value of 0 disables statistics.",
+      "scope": "consumer"
+    },
+    "error_cb": {
+      "default": "",
+      "description": "Error callback (set with rd_kafka_conf_set_error_cb())",
+      "scope": "consumer"
+    },
+    "stats_cb": {
+      "default": "",
+      "description": "Statistics callback (set with rd_kafka_conf_set_stats_cb())",
+      "scope": "consumer"
+    },
+    "log_cb": {
+      "default": "",
+      "description": "Log callback (set with rd_kafka_conf_set_log_cb())",
+      "scope": "consumer"
+    },
+    "log_level": {
+      "default": "6",
+      "description": "Logging level (syslog(3) levels)",
+      "scope": "consumer"
+    },
+    "socket_cb": {
+      "default": "",
+      "description": "Socket creation callback to provide race-free CLOEXEC",
+      "scope": "consumer"
+    },
+    "open_cb": {
+      "default": "",
+      "description": "File open callback to provide race-free CLOEXEC",
+      "scope": "consumer"
+    },
+    "opaque": {
+      "default": "",
+      "description": "Application opaque (set with rd_kafka_topic_conf_set_opaque())",
+      "scope": "consumer"
+    },
+    "queued.min.messages": {
+      "default": "100000",
+      "description": "Minimum number of messages per topic+partition in the local consumer queue.",
+      "scope": "consumer"
+    },
+    "queued.max.messages.kbytes": {
+      "default": "1000000",
+      "description": "Maximum number of kilobytes per topic+partition in the local consumer queue. This value may be overshot by fetch.message.max.bytes.",
+      "scope": "consumer"
+    },
+    "fetch.wait.max.ms": {
+      "default": "100",
+      "description": "Maximum time the broker may wait to fill the response with fetch.min.bytes.",
+      "scope": "consumer"
+    },
+    "fetch.message.max.bytes": {
+      "default": "1048576",
+      "description": "Maximum number of bytes per topic+partition to request when fetching messages from the broker.",
+      "scope": "consumer"
+    },
+    "fetch.min.bytes": {
+      "default": "1",
+      "description": "Minimum number of bytes the broker responds with. If fetch.wait.max.ms expires the accumulated data will be sent to the client regardless of this setting.",
+      "scope": "consumer"
+    },
+    "fetch.error.backoff.ms": {
+      "default": "500",
+      "description": "How long to postpone the next fetch request for a topic+partition in case of a fetch error.",
+      "scope": "consumer"
+    },
+    "group.id": {
+      "default": "",
+      "description": "Consumer group id string. All clients sharing the same group.id belong to the same consumer group.",
+      "scope": "consumer"
+    },
+    "auto.commit.enable": {
+      "default": "true",
+      "description": "If true, periodically commit offset of the last message handed to the application. This commited offset will be used when the process restarts to pick up where it left off. If false, the application will have to call `rd_kafka_offset_store()` to store an offset (optional). **NOTE:** There is currently no zookeeper integration, offsets will be written to local file according to offset.store.path.",
+      "scope": "consumer"
+    },
+    "auto.commit.interval.ms": {
+      "default": "60000",
+      "description": "The frequency in milliseconds that the consumer offsets are commited (written) to offset storage.",
+      "scope": "consumer"
+    },
+    "auto.offset.reset": {
+      "default": "largest",
+      "description": "Action to take when there is no initial offset in offset store or the desired offset is out of range: 'smallest' - automatically reset the offset to the smallest offset, 'largest' - automatically reset the offset to the largest offset, 'error' - trigger an error which is retrieved by consuming messages and checking 'message->err'.",
+      "scope": "consumer"
+    },
+    "offset.store.path": {
+      "default": ".",
+      "description": "Path to local file for storing offsets. If the path is a directory a filename will be automatically generated in that directory based on the topic and partition.",
+      "scope": "consumer"
+    },
+    "offset.store.sync.interval.ms": {
+      "default": "-1",
+      "description": "fsync() interval for the offset file, in milliseconds. Use -1 to disable syncing, and 0 for immediate sync after each write.",
+      "scope": "consumer"
+    },
+    "offset.store.method": {
+      "default": "file",
+      "description": "Offset commit store method: 'file' - local file store (offset.store.path, et.al), 'broker' - broker commit store (requires Apache Kafka 0.8.1 or later on the broker).",
+      "scope": "consumer"
+    }
+  },
+  "producer": {
+    "client.id": {
+      "default": "rdkafka",
+      "description": "Client identifier.",
+      "scope": "producer"
+    },
+    "metadata.broker.list": {
+      "default": "",
+      "description": "Initial list of brokers. The application may also use `rd_kafka_brokers_add()` to add brokers during runtime.",
+      "scope": "producer"
+    },
+    "message.max.bytes": {
+      "default": "4000000",
+      "description": "Maximum transmit message size.",
+      "scope": "producer"
+    },
+    "receive.message.max.bytes": {
+      "default": "100000000",
+      "description": "Maximum receive message size. This is a safety precaution to avoid memory exhaustion in case of protocol hickups. The value should be at least fetch.message.max.bytes * number of partitions consumed from + messaging overhead (e.g. 200000 bytes).",
+      "scope": "producer"
+    },
+    "metadata.request.timeout.ms": {
+      "default": "60000",
+      "description": "Non-topic request timeout in milliseconds. This is for metadata requests, etc.",
+      "scope": "producer"
+    },
+    "topic.metadata.refresh.interval.ms": {
+      "default": "10000",
+      "description": "Topic metadata refresh interval in milliseconds. The metadata is automatically refreshed on error and connect. Use -1 to disable the intervalled refresh.",
+      "scope": "producer"
+    },
+    "topic.metadata.refresh.fast.cnt": {
+      "default": "10",
+      "description": "When a topic looses its leader this number of metadata requests are sent with `topic.metadata.refresh.fast.interval.ms` interval disregarding the `topic.metadata.refresh.interval.ms` value. This is used to recover quickly from transitioning leader brokers.",
+      "scope": "producer"
+    },
+    "topic.metadata.refresh.fast.interval.ms": {
+      "default": "250",
+      "description": "See `topic.metadata.refresh.fast.cnt` description",
+      "scope": "producer"
+    },
+    "topic.metadata.refresh.sparse": {
+      "default": "false",
+      "description": "Sparse metadata requests (consumes less network bandwidth)",
+      "scope": "producer"
+    },
+    "debug": {
+      "default": "",
+      "description": "A comma-separated list of debug contexts to enable: all,generic,broker,topic,metadata,producer,queue,msg,protocol",
+      "scope": "producer"
+    },
+    "socket.timeout.ms": {
+      "default": "60000",
+      "description": "Timeout for network requests.",
+      "scope": "producer"
+    },
+    "socket.send.buffer.bytes": {
+      "default": "0",
+      "description": "Broker socket send buffer size. System default is used if 0.",
+      "scope": "producer"
+    },
+    "socket.receive.buffer.bytes": {
+      "default": "0",
+      "description": "Broker socket receive buffer size. System default is used if 0.",
+      "scope": "producer"
+    },
+    "socket.keepalive.enable": {
+      "default": "false",
+      "description": "Enable TCP keep-alives (SO_KEEPALIVE) on broker sockets",
+      "scope": "producer"
+    },
+    "socket.max.fails": {
+      "default": "3",
+      "description": "Disconnect from broker when this number of send failures (e.g., timed out requests) is reached. Disable with 0. NOTE: The connection is automatically re-established.",
+      "scope": "producer"
+    },
+    "broker.address.ttl": {
+      "default": "300000",
+      "description": "How long to cache the broker address resolving results.",
+      "scope": "producer"
+    },
+    "broker.address.family": {
+      "default": "any",
+      "description": "Allowed broker IP address families: any, v4, v6",
+      "scope": "producer"
+    },
+    "statistics.interval.ms": {
+      "default": "0",
+      "description": "librdkafka statistics emit interval. The application also needs to register a stats callback using `rd_kafka_conf_set_stats_cb()`. The granularity is 1000ms. A value of 0 disables statistics.",
+      "scope": "producer"
+    },
+    "error_cb": {
+      "default": "",
+      "description": "Error callback (set with rd_kafka_conf_set_error_cb())",
+      "scope": "producer"
+    },
+    "stats_cb": {
+      "default": "",
+      "description": "Statistics callback (set with rd_kafka_conf_set_stats_cb())",
+      "scope": "producer"
+    },
+    "log_cb": {
+      "default": "",
+      "description": "Log callback (set with rd_kafka_conf_set_log_cb())",
+      "scope": "producer"
+    },
+    "log_level": {
+      "default": "6",
+      "description": "Logging level (syslog(3) levels)",
+      "scope": "producer"
+    },
+    "socket_cb": {
+      "default": "",
+      "description": "Socket creation callback to provide race-free CLOEXEC",
+      "scope": "producer"
+    },
+    "open_cb": {
+      "default": "",
+      "description": "File open callback to provide race-free CLOEXEC",
+      "scope": "producer"
+    },
+    "opaque": {
+      "default": "",
+      "description": "Application opaque (set with rd_kafka_topic_conf_set_opaque())",
+      "scope": "producer"
+    },
+    "queue.buffering.max.messages": {
+      "default": "100000",
+      "description": "Maximum number of messages allowed on the producer queue.",
+      "scope": "producer"
+    },
+    "queue.buffering.max.ms": {
+      "default": "1000",
+      "description": "Maximum time, in milliseconds, for buffering data on the producer queue.",
+      "scope": "producer"
+    },
+    "message.send.max.retries": {
+      "default": "2",
+      "description": "How many times to retry sending a failing MessageSet. **Note:** retrying may cause reordering.",
+      "scope": "producer"
+    },
+    "retry.backoff.ms": {
+      "default": "100",
+      "description": "The backoff time in milliseconds before retrying a message send.",
+      "scope": "producer"
+    },
+    "compression.codec": {
+      "default": "none",
+      "description": "Compression codec to use for compressing message sets: none, gzip or snappy",
+      "scope": "producer"
+    },
+    "batch.num.messages": {
+      "default": "1000",
+      "description": "Maximum number of messages batched in one MessageSet.",
+      "scope": "producer"
+    },
+    "dr_cb": {
+      "default": "",
+      "description": "Delivery report callback (set with rd_kafka_conf_set_dr_cb())",
+      "scope": "producer"
+    },
+    "dr_msg_cb": {
+      "default": "",
+      "description": "Delivery report callback (set with rd_kafka_conf_set_dr_msg_cb())",
+      "scope": "producer"
+    },
+    "request.required.acks": {
+      "default": "1",
+      "description": "This field indicates how many acknowledgements the leader broker must receive from ISR brokers before responding to the request: *0*=broker does not send any response, *1*=broker will wait until the data is written to local log before sending a response, *-1*=broker will block until message is committed by all in sync replicas (ISRs) before sending response. *>1*=for any number > 1 the broker will block waiting for this number of acknowledgements to be received (but the broker will never wait for more acknowledgements than there are ISRs).",
+      "scope": "producer"
+    },
+    "enforce.isr.cnt": {
+      "default": "0",
+      "description": "Fail messages locally if the currently known ISR count for a partition is less than this value. **NOTE**: The ISR count is fetched from the broker at regular intervals (`topic.metadata.refresh.interval.ms`) and might thus be outdated.",
+      "scope": "producer"
+    },
+    "request.timeout.ms": {
+      "default": "5000",
+      "description": "The ack timeout of the producer request in milliseconds. This value is only enforced by the broker and relies on `request.required.acks` being > 0.",
+      "scope": "producer"
+    },
+    "message.timeout.ms": {
+      "default": "300000",
+      "description": "Local message timeout. This value is only enforced locally and limits the time a produced message waits for successful delivery. A time of 0 is infinite.",
+      "scope": "producer"
+    },
+    "produce.offset.report": {
+      "default": "false",
+      "description": "Report offset of produced message back to application. The application must be use the `dr_msg_cb` to retrieve the offset from `rd_kafka_message_t.offset`.",
+      "scope": "producer"
+    },
+    "partitioner": {
+      "default": "",
+      "description": "Partitioner callback (set with rd_kafka_topic_conf_set_partitioner_cb())",
+      "scope": "producer"
+    }
+  }
+}

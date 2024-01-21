@@ -15,9 +15,12 @@ IGNORED_CONFIGS = (
 )
 
 
-def load_defaults(kafka_version: str):
+def load_defaults(kafka_version: str, source: str):
     return json.load(
-        open(importlib.resources.files("kafkacfg") / f"data/{kafka_version}.json")
+        open(
+            importlib.resources.files("kafkacfg")
+            / f"data/{source}/{kafka_version}.json",
+        )
     )
 
 
@@ -90,7 +93,7 @@ def recommend_config(
 
 
 def difference_between_versions(
-    from_version: str, to_version: str, config_type: str
+    from_version: str, to_version: str, config_type: str, source: str
 ) -> list:
     """Compute the configuration delta between two versions.
 
@@ -101,8 +104,8 @@ def difference_between_versions(
 
     """
     diff = []
-    old_defaults = load_defaults(kafka_version=from_version)
-    new_defaults = load_defaults(kafka_version=to_version)
+    old_defaults = load_defaults(kafka_version=from_version, source=source)
+    new_defaults = load_defaults(kafka_version=to_version, source=source)
     new_flags = set(new_defaults[config_type]) - set(old_defaults[config_type])
     removed_flags = set(old_defaults[config_type]) - set(new_defaults[config_type])
     old_default_col = f"default ({from_version})"

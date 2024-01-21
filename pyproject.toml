@@ -5,7 +5,7 @@ description = "Kafka configuration inspector"
 authors = ["Balthazar Rouberol <br@imap.cc>"]
 license = "MIT"
 readme = "README.md"
-include = ["data/*.json"]
+include = ["data/kafka/*.json", "data/librdkafka/*.json"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
