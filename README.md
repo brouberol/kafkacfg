@@ -91,11 +91,11 @@ $ kafkacfg explain -k 3.4 samples/server.properties | jtbl
 
 You can also explain producer and consumer level configurations, by using the `-c / --config-type` flag:
 
-```
-$ cat -p producer.properties
+```console
+$ cat -p samples/producer.properties
 compression.type=lz4
 retries=2
-$ kafkacfg explain -k 1.1 --config-type producer producer.properties  | jtbl
+$ kafkacfg explain -k 1.1 --config-type producer samples/producer.properties  | jtbl
 ╒══════════════════╤════════════╤═══════════════════════════════════════════════════════════════════════════════════════════════╤══════════╤════════╤═══════════╤════════════════════╤══════════════╕
 │ name             │ override   │ description                                                                                   │ scope    │ type   │ default   │ valid_values       │ importance   │
 ╞══════════════════╪════════════╪═══════════════════════════════════════════════════════════════════════════════════════════════╪══════════╪════════╪═══════════╪════════════════════╪══════════════╡
@@ -160,7 +160,7 @@ The `recommends` command emits sourced configuration recommendation based on bro
 > _Note_: These are suggestions more than absolute thruths. We encourage you to read the sources, test the configuration values and make your own mind.
 
 ```console
-$ kafkacfg recommends -k 3.4 --broker-num-cpus 24 --broker-num-disks 12 server.properties
+$ kafkacfg recommends -k 3.4 --broker-num-cpus 24 --broker-num-disks 12 samples/server.properties
 Recommendation 1: set num.io.threads == 12 (num_disks)
 * https://strimzi.io/blog/2021/06/08/broker-tuning/
 
