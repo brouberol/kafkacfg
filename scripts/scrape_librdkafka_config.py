@@ -62,7 +62,7 @@ def parse_configuration_file() -> dict:
                         "<br>*Type:"
                     )
                     property_type = property_type.rstrip("*").strip()
-                    property_data["description"] = property_description
+                    property_data["description"] = property_description.strip()
                     property_data["type"] = property_type
                 if consumer_producer_property := property_data.pop("c/p", None):
                     for scope in c_p_value_to_scopes[consumer_producer_property]:
