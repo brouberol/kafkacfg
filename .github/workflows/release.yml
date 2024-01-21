@@ -5,8 +5,7 @@ name: Release
 on:
   push:
     tags:
-      - [0-9]+.*
-
+      - "[0-9]+.*"
 
 jobs:
   # Create a github release whenever we push a new tag
