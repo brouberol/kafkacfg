@@ -92,9 +92,8 @@ def main():
     args = parse_args()
     clone_librdkafka_repository(clone_directory=args.librdkafka_repo_dir)
     with contextlib.chdir(args.librdkafka_repo_dir):
-        print(list_librdkafka_tags())
         for tag in list_librdkafka_tags():
-            # print(f"Parsing CONFIGURATION.md for librdkafka {tag}")
+            print(f"Parsing CONFIGURATION.md for librdkafka {tag}")
             checkout_configuration_file_as_of_tag(tag)
             config = parse_configuration_file()
             out_filepath = (
