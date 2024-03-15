@@ -19,6 +19,9 @@ from .version import KAFKA_VERSIONS, LIBRDKAFKA_VERSIONS, __version__
 
 def validate_source_and_version(ctx, _, value):
     """Validate the tuple of (source, version) values"""
+    if "source" not in ctx.params:
+        return value
+
     source = ctx.params["source"]
     version = value
     if source == "librdkafka" and version not in LIBRDKAFKA_VERSIONS:
